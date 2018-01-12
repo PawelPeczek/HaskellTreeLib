@@ -49,7 +49,6 @@ data AVLTree a b
   -- | EmptyTree data constructor is used to create NULL-node
   | EmptyNode
 
-
 -- | Instantiation of Show class-type
 instance (Show a, Show b) => Show (AVLTree a b) where
   -- | The EmptyNode case - base case of structural recursion
@@ -65,7 +64,7 @@ debugShow :: (Show a, Show b) =>
   -> String -- ^ String representation of tree
 debugShow EmptyNode = "(EmptyTree)"
 debugShow (AVLNode x d lt rt bc) =
-  "(" ++ show x ++ "[" ++ show bc ++ "] {data: " ++ show d ++ "}" ++ show lt ++ ", " ++ show rt ++ ")"
+  "(" ++ show x ++ " [" ++ show bc ++ "] {data: " ++ show d ++ "}, " ++ debugShow lt ++ ", " ++ debugShow rt ++ ")"
 
 -- | Function returns AVLTree as an EmptyNode
 newTree :: AVLTree a b -- ^ Output: 'AVLTree a b' build with single EmptyNode
@@ -138,8 +137,8 @@ insert' key val (AVLNode k v lt rt bc) mode =
       let (heighChange, newSubTree) = insert' key val lt mode in
       case (heighChange, bc) of
         (False, _) -> (False, AVLNode k v lt newSubTree bc)
-        (True, Zero) -> (True, AVLNode k v lt newSubTree PlusOne)
-        (True, MinusOne) -> (True, AVLNode k v lt newSubTree Zero)
+        (True, Zero) -> (True, AVLNode k v newSubTree rt PlusOne)
+        (True, MinusOne) -> (True, AVLNode k v newSubTree rt Zero)
         (True, PlusOne) -> (False, leftRotation (AVLNode k v newSubTree rt Zero))
 
 -- Function performs right AVL rotationions
@@ -157,7 +156,7 @@ leftRotation ::
   -> AVLTree a b -- ^ (AVLTree a b) after operation
 leftRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
   case numerizeBC bbc of
-    1 -> lrRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
+    -1 -> lrRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
     otherwise -> llRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
 
 -- | Function that provides an implementation for RR AVLTree Rotations
@@ -207,7 +206,49 @@ lrRotation (AVLNode ak av (AVLNode bk bv blt (AVLNode ck cv clt crt cbc) bbc) ar
   AVLNode ck cv (AVLNode bk bv blt clt newBBC) (AVLNode ak av crt art newABC) Zero
   where
     newABC = if numerizeBC cbc == 1 then MinusOne else Zero
-    newBBC = if numerizeBC cbc == 1 then PlusOne else Zero
+    newBBC = if numerizeBC cbc == -1 then PlusOne else Zero
+
+
+-- | Function that performs delete operation at AVL Tree
+-- returns pair (value, AVLTree) where value is the value associated with
+-- deleted key and AVLTree is a tree after delete with height keeped O(logN)
+-- if the key is not in a tree the function returns Just
+delete :: Ord a =>
+  a -- ^ key of type a to be deleted
+  -> AVLTree a b -- ^ 'AVLTree a b' - the tree to operate on
+  -> Maybe (b, AVLTree a b) -- ^ output as described above
+delete k t =
+  if containsKey k t then Just (v, newT)
+  else Nothing
+  where
+    (v, newT, _) = delete' k t
+
+-- | Function that determines whether a tree conatins given key or not
+containsKey :: Ord a =>
+  a -- ^ Key to be found of type a
+  -> AVLTree a b -- ^ 'AVLTree a b' to find key in
+  -> Bool -- ^ result - indicates the success status of search
+containsKey _ EmptyNode = False
+containsKey key (AVLNode k _ lt rt _) =
+  if key == k then True
+  else (containsKey key lt) || (containsKey key rt)
+
+-- | Function performs actual deletion from AVLTree.
+-- It returns (value, AVLTree, heightChanged) deleted value, AVLTree after
+-- operation and height changing indicator (heightChanged)
+delete' :: Ord a =>
+    a -- ^ Key to be found of type a
+    -> AVLTree a b -- ^ 'AVLTree a b' to find key in
+    -> (b, AVLTree a b, Bool) -- ^ output as described above
+delete' key (AVLNode k v lt rt bc) =
+  case compare key k of
+    EQ -> error "not implemented"
+    GT -> deleteRight key (AVLNode k v lt rt bc)
+    LT -> deleteLeft key (AVLNode k v lt rt bc)
+  where
+    deleteRight key (AVLNode k v lt rt bc) = error "not implemented"
+    deleteLeft key (AVLNode k v lt rt bc) = error "not implemented"
+
 
 -- | Function inserts the same value as key and value of AVLNode using
 -- for that insert function (see above).
