@@ -8,4 +8,5 @@ import AVLTree
 someFunc :: IO ()
 someFunc = do
   putStrLn "Hellow World!"
-  putStrLn $ show $ reversedOrder $ insert 3 .insert 3 . insert 7 . insert 8 $ newTree
+  putStrLn $ show $ linearOrder $ insertKeyAsValue 7 .insertKeyAsValue 3 . insertKeyAsValue 7 . insertKeyAsValue 4 $ newTree
+  putStrLn $ show $ depth $ insertKeyAsValue 7 .insertKeyAsValue 3 . insertKeyAsValue 7 . insertKeyAsValue 4 $ newTree
