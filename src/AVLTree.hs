@@ -9,6 +9,9 @@ Copyright   : (c) Wojciech Geisler, 2018
 module AVLTree (
           AVLTree,
           newTree,
+          height,
+          isValid,
+          fromList,
           linearOrder,
           reversedOrder,
           linearKeysOrder,
@@ -81,7 +84,20 @@ debugShow :: (Show a, Show b) =>
   -> String -- ^ String representation of tree
 debugShow EmptyNode = "(EmptyTree)"
 debugShow (AVLNode x d lt rt bc) =
-  "(" ++ show x ++ " [" ++ show bc ++ "] {data: " ++ show d ++ "}, " ++ debugShow lt ++ ", " ++ debugShow rt ++ ")"
+  "\n(" ++ show x ++ " [" ++ show bc ++ "] {data: " ++ show d ++ "}, " ++ debugShow lt ++ ", " ++ debugShow rt ++ ")"
+
+-- | Calculates the maximum height of a tree
+height :: AVLTree a b -> Int
+height EmptyNode = 0
+height (AVLNode _ _ lt rt _) = 1 + max (height lt) (height rt)
+
+-- | Checks if a given tree is a valid AVL tree
+isValid :: AVLTree a b -> Bool
+isValid EmptyNode = True
+isValid (AVLNode _ _ lt rt bc) = diff == numerizeBC bc
+    where lh = height lt
+          rh = height rt
+          diff = lh - rh
 
 -- | Function returns AVLTree as an EmptyNode
 newTree :: AVLTree a b -- ^ Output: 'AVLTree a b' build with single EmptyNode
@@ -414,3 +430,7 @@ getValueOfKey k t =
 -- | Infix operator for adding a key value pair to a tree
 (&:) :: Ord a => (a, b) -> AVLTree a b -> AVLTree a b
 (&:) (k, v) t = insert k v t
+
+
+fromList :: Ord a => [(a, b)] -> AVLTree a b
+fromList = foldr (&:) newTree

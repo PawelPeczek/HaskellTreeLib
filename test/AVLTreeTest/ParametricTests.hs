@@ -16,10 +16,12 @@ instance (Ord a, Arbitrary a, Arbitrary b) => Arbitrary (AVLTree a b) where
             return $ (foldr (&:) newTree (zip keys vals))
         )
 
-
 prop_singletonInsert_imdepotence k v t =
     classify (t == newTree) "empty tree" $
     (insertSingleton k v $ insertSingleton k v t) == (insertSingleton k v t)
+
+prop_insertGeneratesValidTree :: (Ord a) => [(a, b)] -> Bool
+prop_insertGeneratesValidTree xs = AVLTree.isValid $ AVLTree.fromList xs
 
 --------------------------
 return []
