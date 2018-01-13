@@ -5,7 +5,7 @@ import Test.HUnit
 import Test.QuickCheck.All
 
 import AVLTree
-import AVLTree.ParametricTests as ParametricTests
+import AVLTreeTest.ParametricTests as ParametricTests
 
 --main :: IO ()
 main = do --runTestTT tests

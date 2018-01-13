@@ -1,4 +1,4 @@
-module AVLTree.UnitTests (
+module AVLTreeTest.UnitTests (
     test1
     ) where
 
