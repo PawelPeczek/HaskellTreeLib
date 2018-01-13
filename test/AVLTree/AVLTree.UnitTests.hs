@@ -1,10 +1,8 @@
---import AVLTree.UnitTests
---import AVLTree.ParametricTests
-{-# LANGUAGE TemplateHaskell #-}
+module AVLTree.UnitTests (
+    test1
+    ) where
 
 import Test.HUnit
-
-import Test.QuickCheck.All
 
 import AVLTree
 
@@ -36,12 +34,6 @@ tests' = test [ "test1" ~: "(foo 3)" ~: (1,2) ~=? (foo 3),
                               assertEqual "for the first result of partA," 5 x
                               partB y @? "(partB " ++ show y ++ ") failed" ]
 
-prop_foo x y = x + y == y + x
-
-return []
-runTests = $quickCheckAll
-
---main :: IO ()
-main = do runTestTT tests
-          runTests
-
+--main :: IO Counts
+--main = do _ <- runTestTT tests
+--               runTestTT tests'
