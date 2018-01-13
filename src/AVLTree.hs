@@ -10,7 +10,6 @@ module AVLTree
 --(
 --          AVLTree,
 --          newTree,
---          height,
 --          isValid,
 --          fromList,
 --          linearOrder,
@@ -91,29 +90,23 @@ debugShow tree = debugShow' 0 tree
         debugShow' shift t@(AVLNode x d lt rt bc) =
             pad shift ++
             "(" ++ show x ++
-            " [" ++ show bc ++ ", h" ++ (show $ height t) ++ "]" ++
+            " [" ++ show bc ++ ", h" ++ (show $ depth t) ++ "]" ++
             "{data: " ++ show d ++ "}\n" ++
             debugShow' (shift + 1) lt ++ "\n" ++
             debugShow' (shift + 1) rt ++ "\n" ++
             pad shift ++ ")"
         pad sh = replicate sh ' '
 
-
--- | Calculates the maximum height of a tree
-height :: AVLTree a b -> Int
-height EmptyNode = 0
-height (AVLNode _ _ lt rt _) = 1 + max (height lt) (height rt)
-
 -- | Checks if given tree is a valid AVL tree
 isValid :: AVLTree a b -> Bool
 isValid EmptyNode = True
 isValid (AVLNode _ _ lt rt bc) = diff == numerizeBC bc && isValid lt && isValid rt
-    where diff = height lt - height rt
+    where diff = depth lt - depth rt
 
 isValid' :: AVLTree a b -> Bool
 isValid' EmptyNode = True
 isValid' (AVLNode _ _ lt rt bc) = diff `elem` [-1, 0, 1] && isValid' lt && isValid' rt
-    where diff = height lt - height rt
+    where diff = depth lt - depth rt
 
 -- | Function returns AVLTree as an EmptyNode
 newTree :: AVLTree a b -- ^ Output: 'AVLTree a b' build with single EmptyNode
