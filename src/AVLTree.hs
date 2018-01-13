@@ -233,6 +233,13 @@ containsKey key (AVLNode k _ lt rt _) =
   if key == k then True
   else (containsKey key lt) || (containsKey key rt)
 
+-- | Function gets BalanceCoeff from given AVLTree
+getBC ::
+  AVLTree a b -- ^ 'AVLTree a b' to find BalanceCoeff
+  -> BalanceCoeff -- ^ result as described above
+getBC EmptyNode = error "Unsupported operation!"
+getBC (AVLNode _ _ _ _ bc) = bc
+
 -- | Function performs actual deletion from AVLTree.
 -- It returns (value, AVLTree, heightChanged) deleted value, AVLTree after
 -- operation and height changing indicator (heightChanged)
@@ -242,13 +249,74 @@ delete' :: Ord a =>
     -> (b, AVLTree a b, Bool) -- ^ output as described above
 delete' key (AVLNode k v lt rt bc) =
   case compare key k of
-    EQ -> error "not implemented"
+    EQ -> actualDelete (AVLNode k v lt rt bc)
     GT -> deleteRight key (AVLNode k v lt rt bc)
     LT -> deleteLeft key (AVLNode k v lt rt bc)
   where
-    deleteRight key (AVLNode k v lt rt bc) = error "not implemented"
-    deleteLeft key (AVLNode k v lt rt bc) = error "not implemented"
+    deleteRight key (AVLNode k v lt rt bc) =
+      let (delV, rt', heighChg) = delete' key rt in
+      case (heighChg, bc, getBC rt') of
+        (False, _, _) -> (delV, (AVLNode k v lt rt' bc), False)
+        (True, Zero, _) -> (delV, (AVLNode k v lt rt' PlusOne), False)
+        (True, MinusOne, _) -> (delV, (AVLNode k v lt rt' Zero), True)
+        (True, PlusOne, Zero) -> (delV, llRotation (AVLNode k v lt rt' Zero), False)
+        (True, PlusOne, PlusOne) -> (delV, llRotation (AVLNode k v lt rt' Zero), True)
+        (True, PlusOne, MinusOne) -> (delV, lrRotation (AVLNode k v lt rt' Zero), True)
+    deleteLeft key (AVLNode k v lt rt bc) =
+      let (delV, lt', heighChg) = delete' key lt in
+      case (heighChg, bc, getBC lt') of
+        (False, _, _) -> (delV, (AVLNode k v lt' rt bc), False)
+        (True, Zero, _) -> (delV, (AVLNode k v lt' rt MinusOne), False)
+        (True, PlusOne, _) -> (delV, (AVLNode k v lt' rt Zero), True)
+        (True, MinusOne, Zero) -> (delV, rrRotation (AVLNode k v lt' rt Zero), False)
+        (True, MinusOne, MinusOne) -> (delV, rrRotation (AVLNode k v lt' rt Zero), True)
+        (True, MinusOne, PlusOne) -> (delV, rlRotation (AVLNode k v lt' rt Zero), True)
 
+-- | Function that performs actuall deletion of tree node
+-- to match the convention of delete' it returns
+-- (value, AVLTree, heightChanged) deleted value, AVLTree after
+-- operation and height changing indicator (heightChanged)
+actualDelete :: (Ord a) =>
+  AVLTree a b -- ^ 'AVLTree a b' to delete (first node will be deleted)
+  -> (b, AVLTree a b, Bool) -- ^ output as described above
+actualDelete (AVLNode k v (AVLNode lk lv llt lrt lbc) (AVLNode rk rv rlt rrt rbc) bc) =
+  let (v', t', heighChg) = delete' (getKey predecessor) (AVLNode lk lv llt lrt lbc) in
+  case  (heighChg, bc) of
+    (False, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) bc, False)
+    (True, Zero) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) PlusOne, False)
+    (True, PlusOne) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero, False)
+    -- rotation case -> now old node rt has bc +2 -> some right rotation
+    (True, MinusOne) -> (v, rightRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
+  where
+    predecessor = getMaxElem (AVLNode lk lv llt lrt lbc)
+actualDelete (AVLNode k v EmptyNode (AVLNode rk rv rlt rrt rbc) bc) =
+  (v, (AVLNode rk rv rlt rrt rbc), True)
+actualDelete (AVLNode k v (AVLNode lk lv llt lrt lbc) EmptyNode bc) =
+  (v, (AVLNode lk lv llt lrt lbc), True)
+actualDelete (AVLNode k v EmptyNode EmptyNode bc) = (v, EmptyNode, True)
+
+-- | Function returns maximum element in a tree
+getMaxElem ::
+  AVLTree a b -- ^ tree to find maximum
+  -> AVLTree a b -- ^ maximum element in tree
+getMaxElem (AVLNode k v lt EmptyNode bc) = (AVLNode k v lt EmptyNode bc)
+getMaxElem (AVLNode k v lt rt bc) = getMaxElem rt
+
+-- | Function that returns first key from given AVLTree (bascially allowed only for
+-- AVLNode data constructor)
+getKey ::
+  AVLTree a b -- ^ 'AVLTree a b' to get the first element key
+  -> a -- ^ requested key
+getKey EmptyNode = error "Unsupported operation!"
+getKey (AVLNode k _ _ _ _) = k
+
+-- | Function that returns first value from given AVLTree (bascially allowed only for
+-- AVLNode data constructor)
+getValue ::
+  AVLTree a b -- ^ 'AVLTree a b' to get the first element value
+  -> b -- ^ requested value
+getValue EmptyNode = error "Unsupported operation!"
+getValue (AVLNode _ v _ _ _) = v
 
 -- | Function inserts the same value as key and value of AVLNode using
 -- for that insert function (see above).
