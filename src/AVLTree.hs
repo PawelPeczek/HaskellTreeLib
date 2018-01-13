@@ -7,11 +7,14 @@ Copyright   : (c) Wojciech Geisler, 2018
                   Paweł Pęczek, 2018
 -}
 module AVLTree (
+          AVLTree,
           newTree,
           linearOrder,
           reversedOrder,
           insert,
+          insertSingleton,
           insertKeyAsValue,
+          insertKeyAsValueSingleton,
           debugShow,
           depth,
           delete
@@ -97,17 +100,27 @@ reversedOrder :: (Ord a) =>
 reversedOrder = (reverse . linearOrder)
 
 -- | Function that insert an element key of type a and value of type b into the AVLTree a b.
--- This version of insert function provides a 'Set-like' insert
--- i.e. each element may appears only once at tree
--- Overall concept of insertion operation in functional language like Haskell
--- comes from https://gist.github.com/timjb/8292342 - but it's not simply a copy
--- of this code
+-- This version of insert function provides a straightforward insert
+-- i.e. each element may appears multiple times at the tree.
 insert :: (Ord a) =>
   a -- ^ Key of element to be inserted
   -> b -- ^ Value of the element to be inserted
   -> AVLTree a b -- ^ 'AVLTree a b' to which the element will be inserted
   -> AVLTree a b -- ^ 'AVLTree a b' after insertion of element
-insert k v t = snd $ insert' k v t False
+insert k v t = snd $ insert' k v t True
+
+-- | Function that insert an element key of type a and value of type b into the AVLTree a b.
+-- This version of insert function provides a 'Set-like' insert
+-- i.e. each element may appears only once at the tree.
+-- Overall concept of insertion operation in functional language like Haskell
+-- comes from https://gist.github.com/timjb/8292342 - but it's not simply a copy
+-- of this code
+insertSingleton :: (Ord a) =>
+  a -- ^ Key of element to be inserted
+  -> b -- ^ Value of the element to be inserted
+  -> AVLTree a b -- ^ 'AVLTree a b' to which the element will be inserted
+  -> AVLTree a b -- ^ 'AVLTree a b' after insertion of element
+insertSingleton k v t = snd $ insert' k v t False
 
 -- | Internal insert function that keep the AVLTree balanced (with heigh O(logN))
 -- It returns pair (heightHasChanged, AVLTree) with
@@ -137,7 +150,7 @@ insert' key val (AVLNode k v lt rt bc) mode =
     insertLeft key val (AVLNode k v lt rt bc) mode =
       let (heighChange, newSubTree) = insert' key val lt mode in
       case (heighChange, bc) of
-        (False, _) -> (False, AVLNode k v lt newSubTree bc)
+        (False, _) -> (False, AVLNode k v newSubTree rt bc)
         (True, Zero) -> (True, AVLNode k v newSubTree rt PlusOne)
         (True, MinusOne) -> (True, AVLNode k v newSubTree rt Zero)
         (True, PlusOne) -> (False, leftRotation (AVLNode k v newSubTree rt Zero))
@@ -320,12 +333,20 @@ getValue EmptyNode = error "Unsupported operation!"
 getValue (AVLNode _ v _ _ _) = v
 
 -- | Function inserts the same value as key and value of AVLNode using
--- for that insert function (see above).
+-- for that insert function (see above). Repetition of keys in tree - allowed.
 insertKeyAsValue :: (Ord a) =>
   a -- ^ Key and value of element to be inserted
   -> AVLTree a a -- ^ 'AVLTree a b' to which the element will be inserted
   -> AVLTree a a -- ^ 'AVLTree a b' after insertion of element
 insertKeyAsValue x = insert x x
+
+-- | Function inserts the same value as key and value of AVLNode using
+-- for that insert function (see above). Repetition of keys in tree - forbidden.
+insertKeyAsValueSingleton :: (Ord a) =>
+  a -- ^ Key and value of element to be inserted
+  -> AVLTree a a -- ^ 'AVLTree a b' to which the element will be inserted
+  -> AVLTree a a -- ^ 'AVLTree a b' after insertion of element
+insertKeyAsValueSingleton x = insertSingleton x x
 
 -- | Function that returns depth of tree
 depth ::
