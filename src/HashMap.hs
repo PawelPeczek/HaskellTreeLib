@@ -35,7 +35,7 @@ insertKeyVal :: (Eq a, Hashable a) =>
   -> b -- ^ value
   -> HashMap a b -- ^ 'HashMap a b' to insert to
   -> HashMap a b -- ^ 'HashMap a b' after insertion
-insertKeyVal k v (HashMap avl) = HashMap (insertSingleton (prepeareKey k) v avl)
+insertKeyVal k v (HashMap avl) = HashMap (insertUnique (prepeareKey k) v avl)
 
 -- | Function that get element with a given key from given HashMap
 -- without deleting it. The function returns (HashMap, Maybe value)

@@ -20,7 +20,7 @@ isOrdered (x:y:xs) = x <= y && isOrdered xs
 
 prop_singletonInsert_imdepotence k v t =
     classify (t == newTree) "empty tree" $
-    (insertSingleton k v $ insertSingleton k v t) == (insertSingleton k v t)
+    (insertUnique k v $ insertUnique k v t) == (insertUnique k v t)
 
 prop_insertGeneratesValidTree = AVLTree.isValid . AVLTree.fromList
 

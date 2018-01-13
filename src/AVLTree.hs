@@ -18,9 +18,9 @@ module AVLTree
 --          linearKeysOrder,
 --          reversedKeysOrder,
 --          insert,
---          insertSingleton,
+--          insertUnique,
 --          insertKeyAsValue,
---          insertKeyAsValueSingleton,
+--          insertKeyAsValueUnique,
 --          debugShow,
 --          depth,
 --          delete,
@@ -185,12 +185,12 @@ insert k v t = snd $ insert' k v t True
 -- Overall concept of insertion operation in functional language like Haskell
 -- comes from https://gist.github.com/timjb/8292342 - but it's not simply a copy
 -- of this code
-insertSingleton :: (Ord a) =>
+insertUnique :: (Ord a) =>
   a -- ^ Key of element to be inserted
   -> b -- ^ Value of the element to be inserted
   -> AVLTree a b -- ^ 'AVLTree a b' to which the element will be inserted
   -> AVLTree a b -- ^ 'AVLTree a b' after insertion of element
-insertSingleton k v t = snd $ insert' k v t False
+insertUnique k v t = snd $ insert' k v t False
 
 -- | Internal insert function that keep the AVLTree balanced (with heigh O(logN))
 -- It returns pair (heightHasChanged, AVLTree) with
@@ -412,11 +412,11 @@ insertKeyAsValue x = insert x ()
 
 -- | Function inserts the same value as key and value of AVLNode using
 -- for that insert function (see above). Repetition of keys in tree - forbidden.
-insertKeyAsValueSingleton :: (Ord a) =>
+insertKeyAsValueUnique :: (Ord a) =>
   a -- ^ Key and value of element to be inserted
   -> AVLTree a () -- ^ 'AVLTree a ()' to which the element will be inserted
   -> AVLTree a () -- ^ 'AVLTree a ()' after insertion of element
-insertKeyAsValueSingleton x = insertSingleton x ()
+insertKeyAsValueUnique x = insertUnique x ()
 
 -- | Function that returns depth of tree
 depth ::
