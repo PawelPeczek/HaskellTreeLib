@@ -47,6 +47,6 @@ push x (Stack xs) = Stack (x:xs)
 -- function returns "Nothing"
 pop ::
   Stack a -- ^ 'Stack a' to be popped from
-  -> Maybe (Stack a, a) -- Return packaged in Maybe context
-pop (Stack []) = Nothing
-pop (Stack (x:xs)) = Just (Stack xs, x)
+  -> (Stack a, Maybe a) -- Return packaged in Maybe context
+pop (Stack []) = (Stack [], Nothing)
+pop (Stack (x:xs)) = (Stack xs, Just x)

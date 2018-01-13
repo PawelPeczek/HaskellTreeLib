@@ -11,6 +11,8 @@ module AVLTree (
           newTree,
           linearOrder,
           reversedOrder,
+          linearKeysOrder,
+          reversedKeysOrder,
           insert,
           insertSingleton,
           insertKeyAsValue,
@@ -18,10 +20,17 @@ module AVLTree (
           debugShow,
           depth,
           delete,
+          containsKey,
+          delete,
+          getValueOfKey,
           (&:)
         ) where
 
 import Stack
+
+-- | Definition of data type used as value if we want to identify key and
+-- value while inserting
+data NULL = NULL deriving(Show)
 
 -- | Definition of balance coefficient in AVLTree
 data BalanceCoeff
@@ -100,6 +109,31 @@ reversedOrder :: (Ord a) =>
   -> [b] -- ^ Output 'List'
 reversedOrder = (reverse . linearOrder)
 
+-- | Function that returns list of keys in AVLTree in ascending order
+linearKeysOrder :: (Ord a) =>
+  AVLTree a b -- ^ 'AVLTree a b' to linearize
+  -> [a] -- ^ 'List' of keys in ascending order
+linearKeysOrder EmptyNode = []
+linearKeysOrder t = toList $ postorderKeysWithStack t emptyStack
+
+-- | Helper function that provides a way to make list of keys in AVLTree
+-- in O(n) time - as we always put element at the stack in O(1) instead
+-- of simply concatenating lists at each of O(logN) levels in AVL Tree
+-- Postorder -> to ensure correct order while popping from the "Stack" (FILO)
+postorderKeysWithStack :: (Ord a) =>
+  AVLTree a b -- ^ 'AVLTree a b' to make operation on
+  -> Stack a -- ^ 'Stack b' to push values at
+  -> Stack a -- ^ 'Stack b' - function output
+postorderKeysWithStack EmptyNode x = x
+postorderKeysWithStack (AVLNode n _ lt rt _) x =
+  (postorderKeysWithStack lt) $ (push n) $ (postorderKeysWithStack rt x)
+
+-- | Function returns list that consists of AVLTree keys in descending order of keys
+reversedKeysOrder :: (Ord a) =>
+  AVLTree a b -- ^ 'AVLTree a b' to linearize
+  -> [a] -- ^ Output 'List'
+reversedKeysOrder = (reverse . linearKeysOrder)
+
 -- | Function that insert an element key of type a and value of type b into the AVLTree a b.
 -- This version of insert function provides a straightforward insert
 -- i.e. each element may appears multiple times at the tree.
@@ -136,7 +170,7 @@ insert' :: (Ord a) =>
 insert' k v EmptyNode _ = (True, AVLNode k v (EmptyNode) (EmptyNode) Zero)
 insert' key val (AVLNode k v lt rt bc) mode =
   case (compare key k, mode) of
-    (EQ, False) -> (False, AVLNode k v lt rt bc)
+    (EQ, False) -> (False, AVLNode k val lt rt bc)
     (EQ, True) -> insertRight key val (AVLNode k v lt rt bc) mode
     (GT, _) -> insertRight key val (AVLNode k v lt rt bc) mode
     (LT, _) -> insertLeft key val (AVLNode k v lt rt bc) mode
@@ -231,10 +265,10 @@ lrRotation (AVLNode ak av (AVLNode bk bv blt (AVLNode ck cv clt crt cbc) bbc) ar
 delete :: Ord a =>
   a -- ^ key of type a to be deleted
   -> AVLTree a b -- ^ 'AVLTree a b' - the tree to operate on
-  -> Maybe (b, AVLTree a b) -- ^ output as described above
+  -> (AVLTree a b, Maybe b) -- ^ output as described above
 delete k t =
-  if containsKey k t then Just (v, newT)
-  else Nothing
+  if containsKey k t then (newT, Just v)
+  else (t, Nothing)
   where
     (v, newT, _) = delete' k t
 
@@ -337,17 +371,17 @@ getValue (AVLNode _ v _ _ _) = v
 -- for that insert function (see above). Repetition of keys in tree - allowed.
 insertKeyAsValue :: (Ord a) =>
   a -- ^ Key and value of element to be inserted
-  -> AVLTree a a -- ^ 'AVLTree a b' to which the element will be inserted
-  -> AVLTree a a -- ^ 'AVLTree a b' after insertion of element
-insertKeyAsValue x = insert x x
+  -> AVLTree a () -- ^ 'AVLTree a ()' to which the element will be inserted
+  -> AVLTree a () -- ^ 'AVLTree a ()' after insertion of element
+insertKeyAsValue x = insert x ()
 
 -- | Function inserts the same value as key and value of AVLNode using
 -- for that insert function (see above). Repetition of keys in tree - forbidden.
 insertKeyAsValueSingleton :: (Ord a) =>
   a -- ^ Key and value of element to be inserted
-  -> AVLTree a a -- ^ 'AVLTree a b' to which the element will be inserted
-  -> AVLTree a a -- ^ 'AVLTree a b' after insertion of element
-insertKeyAsValueSingleton x = insertSingleton x x
+  -> AVLTree a () -- ^ 'AVLTree a ()' to which the element will be inserted
+  -> AVLTree a () -- ^ 'AVLTree a ()' after insertion of element
+insertKeyAsValueSingleton x = insertSingleton x ()
 
 -- | Function that returns depth of tree
 depth ::
@@ -355,6 +389,24 @@ depth ::
   -> Int -- ^ 'Int' depth of tree (with regards that depth of EmptyNode = 0)
 depth EmptyNode = 0
 depth (AVLNode _ _ lt rt _) = max (depth lt) (depth rt) + 1
+
+-- | Function that get element with a given key from given AVLTree
+-- without deleting it. The function returns (AVLTree, Maybe value)
+-- so that in case of success the requested value is placed in Just value,
+-- otherwise the second element of pair is Nothing
+getValueOfKey :: (Ord a) =>
+  a -- ^ searching ket of type a
+  -> AVLTree a b -- ^ 'AVLTree a b' to look for element
+  -> (AVLTree a b, Maybe b) -- ^ result as described above
+getValueOfKey k t =
+  if containsKey k t == True then (t, Just (getFromTree k t))
+  else (t, Nothing)
+  where
+    getFromTree _ EmptyNode = error "Unsupported operation!"
+    getFromTree key (AVLNode k v lt rt _) =
+      if key == k then v
+      else if key > k then getFromTree key rt
+      else getFromTree key lt
 
 -- | Infix operator for adding a key value pair to a tree
 (&:) :: Ord a => (a, b) -> AVLTree a b -> AVLTree a b

@@ -1,7 +1,7 @@
 {-# OPTIONS_HADDOCK prune #-}
 
 {-|
-Module      : AVLTree
+Module      : AVLSort
 Description : Module with basic AVL sort functionality
               Main feature: sorting in O(NlogN)
 Copyright   : (c) Wojciech Geisler, 2018
@@ -25,4 +25,4 @@ sortAVLAsc :: Ord a =>
   -> [a]-- ^ sorted (ASC) input list
 sortAVLAsc [] = []
 sortAVLAsc xs =
-   linearOrder . foldr insertKeyAsValue newTree $ xs
+   linearKeysOrder . foldr insertKeyAsValue newTree $ xs
