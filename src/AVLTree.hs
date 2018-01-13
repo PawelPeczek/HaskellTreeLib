@@ -6,28 +6,30 @@ Description : Module with basic functionality of AVL Tree included
 Copyright   : (c) Wojciech Geisler, 2018
                   Paweł Pęczek, 2018
 -}
-module AVLTree (
-          AVLTree,
-          newTree,
-          height,
-          isValid,
-          fromList,
-          linearOrder,
-          reversedOrder,
-          linearKeysOrder,
-          reversedKeysOrder,
-          insert,
-          insertSingleton,
-          insertKeyAsValue,
-          insertKeyAsValueSingleton,
-          debugShow,
-          depth,
-          delete,
-          containsKey,
-          delete,
-          getValueOfKey,
-          (&:)
-        ) where
+module AVLTree 
+--(
+--          AVLTree,
+--          newTree,
+--          height,
+--          isValid,
+--          fromList,
+--          linearOrder,
+--          reversedOrder,
+--          linearKeysOrder,
+--          reversedKeysOrder,
+--          insert,
+--          insertSingleton,
+--          insertKeyAsValue,
+--          insertKeyAsValueSingleton,
+--          debugShow,
+--          depth,
+--          delete,
+--          containsKey,
+--          delete,
+--          getValueOfKey,
+--          (&:)
+--        )
+        where
 
 import Stack
 
@@ -105,10 +107,13 @@ height (AVLNode _ _ lt rt _) = 1 + max (height lt) (height rt)
 -- | Checks if given tree is a valid AVL tree
 isValid :: AVLTree a b -> Bool
 isValid EmptyNode = True
-isValid (AVLNode _ _ lt rt bc) = diff == numerizeBC bc
-    where lh = height lt
-          rh = height rt
-          diff = lh - rh
+isValid (AVLNode _ _ lt rt bc) = diff == numerizeBC bc && isValid lt && isValid rt
+    where diff = height lt - height rt
+
+isValid' :: AVLTree a b -> Bool
+isValid' EmptyNode = True
+isValid' (AVLNode _ _ lt rt bc) = diff `elem` [-1, 0, 1] && isValid' lt && isValid' rt
+    where diff = height lt - height rt
 
 -- | Function returns AVLTree as an EmptyNode
 newTree :: AVLTree a b -- ^ Output: 'AVLTree a b' build with single EmptyNode

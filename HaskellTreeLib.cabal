@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.20.0.
+-- This file has been generated from package.yaml by hpack version 0.21.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 247d038ffb84e33858a8cc99f4d4abf4395a5959c29bb69982406e8f274aa950
+-- hash: 394e1e528e73ef520c227e17da546b36ce4d16dda86a37cfa76aa26417a6f5c1
 
 name:           HaskellTreeLib
 version:        0.1.0.0
@@ -29,7 +29,9 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      HUnit
+    , QuickCheck
+    , base >=4.7 && <5
     , hashable >=1.2.6.1
   exposed-modules:
       AVLSort
@@ -49,7 +51,9 @@ executable HaskellTreeLib-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      HaskellTreeLib
+      HUnit
+    , HaskellTreeLib
+    , QuickCheck
     , base >=4.7 && <5
     , hashable >=1.2.6.1
   other-modules:
@@ -63,9 +67,13 @@ test-suite HaskellTreeLib-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      HaskellTreeLib
+      HUnit
+    , HaskellTreeLib
+    , QuickCheck
     , base >=4.7 && <5
     , hashable >=1.2.6.1
   other-modules:
+      AVLTreeTest.ParametricTests
+      AVLTreeTest.UnitTests
       Paths_HaskellTreeLib
   default-language: Haskell2010

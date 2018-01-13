@@ -24,7 +24,59 @@ prop_singletonInsert_imdepotence k v t =
 
 prop_insertGeneratesValidTree = AVLTree.isValid . AVLTree.fromList
 
+prop_insertGeneratesTreeWithValidHeight = AVLTree.isValid' . AVLTree.fromList
+
 prop_linearOrderIsOrdered = isOrdered . linearKeysOrder 
+
+prop_rightRotationPreservesOrdering xs =
+    isValidInput tree ==>
+    isOrdered . linearKeysOrder . rightRotation $ tree
+    where tree = fromList xs
+          isValidInput EmptyNode = False
+          isValidInput (AVLNode _ _ _ EmptyNode _) = False
+          isValidInput _ = True
+
+prop_rrRotationPreservesOrdering xs =
+    isValidInput tree ==>
+    isOrdered . linearKeysOrder . rrRotation $ tree
+    where tree = fromList xs
+          isValidInput EmptyNode = False
+          isValidInput (AVLNode _ _ _ EmptyNode _) = False
+          isValidInput _ = True
+
+prop_leftRotationPreservesOrdering xs =
+    isValidInput tree ==>
+    isOrdered . linearKeysOrder . leftRotation $ tree
+    where tree = fromList xs
+          isValidInput EmptyNode = False
+          isValidInput (AVLNode _ _ EmptyNode _ _) = False
+          isValidInput _ = True
+
+prop_rlRotationPreservesOrdering xs =
+    isValidInput tree ==>
+    isOrdered . linearKeysOrder . rlRotation $ tree
+    where tree = fromList xs
+          isValidInput EmptyNode = False
+          isValidInput (AVLNode _ _ _ EmptyNode _) = False
+          isValidInput (AVLNode _ _ _ (AVLNode _ _ EmptyNode _ _) _) = False
+          isValidInput _ = True
+
+prop_lrRotationPreservesOrdering xs =
+    isValidInput tree ==>
+    isOrdered . linearKeysOrder . lrRotation $ tree
+    where tree = fromList xs
+          isValidInput EmptyNode = False
+          isValidInput (AVLNode _ _ EmptyNode _ _) = False
+          isValidInput (AVLNode _ _ (AVLNode _ _ _ EmptyNode _) _ _) = False
+          isValidInput _ = True
+
+prop_llRotationPreservesOrdering xs =
+    isValidInput tree ==>
+    isOrdered . linearKeysOrder . llRotation $ tree
+    where tree = fromList xs
+          isValidInput EmptyNode = False
+          isValidInput (AVLNode _ _ EmptyNode _ _) = False
+          isValidInput _ = True
 
 --------------------------
 return []
