@@ -17,11 +17,9 @@ instance (Ord a, Arbitrary a, Arbitrary b) => Arbitrary (AVLTree a b) where
         )
 
 
-prop_insert_imdepotence k v =
-    (insert k v $ insert k v $ newTree) == (insert k v $ newTree)
-
-prop_singletonInsert_imdepotence k v =
-    (insertSingleton k v $ insertSingleton k v $ newTree) == (insertSingleton k v $ newTree)
+prop_singletonInsert_imdepotence k v t =
+    classify (t == newTree) "empty tree" $
+    (insertSingleton k v $ insertSingleton k v t) == (insertSingleton k v t)
 
 --------------------------
 return []

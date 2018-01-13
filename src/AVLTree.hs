@@ -40,6 +40,14 @@ data BalanceCoeff
   | PlusOne
   -- | RightSubtree is one-level heigher than left subtree
   | MinusOne
+  deriving (Eq)
+
+
+-- | Instantiation of Show class-type
+instance Show BalanceCoeff where
+  show Zero = "0"
+  show PlusOne = "+1"
+  show MinusOne = "-1"
 
 -- | Function that maps BalanceCoeff into Int
 numerizeBC ::
@@ -49,12 +57,6 @@ numerizeBC Zero = 0
 numerizeBC PlusOne = 1
 numerizeBC MinusOne = -1
 
--- | Instantiation of Show class-type
-instance Show BalanceCoeff where
-  show Zero = "0"
-  show PlusOne = "+1"
-  show MinusOne = "-1"
-
 -- | Definiction of AVL tree.
 data AVLTree a b
   -- | AVLModule data constructor provides AVLNode of type a with the
@@ -62,6 +64,7 @@ data AVLTree a b
   = AVLNode a b (AVLTree a b) (AVLTree a b) BalanceCoeff
   -- | EmptyTree data constructor is used to create NULL-node
   | EmptyNode
+  deriving (Eq)
 
 -- | Instantiation of Show class-type
 instance (Show a, Show b) => Show (AVLTree a b) where
