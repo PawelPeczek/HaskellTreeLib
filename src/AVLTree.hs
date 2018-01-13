@@ -17,7 +17,8 @@ module AVLTree (
           insertKeyAsValueSingleton,
           debugShow,
           depth,
-          delete
+          delete,
+          (&:)
         ) where
 
 import Stack
@@ -354,3 +355,7 @@ depth ::
   -> Int -- ^ 'Int' depth of tree (with regards that depth of EmptyNode = 0)
 depth EmptyNode = 0
 depth (AVLNode _ _ lt rt _) = max (depth lt) (depth rt) + 1
+
+-- | Infix operator for adding a key value pair to a tree
+(&:) :: Ord a => (a, b) -> AVLTree a b -> AVLTree a b
+(&:) (k, v) t = insert k v t
