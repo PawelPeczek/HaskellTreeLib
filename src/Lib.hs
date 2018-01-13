@@ -43,3 +43,16 @@ someFunc = do
   -- putStrLn $ show $ getValues . fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
   -- putStrLn $ show $ fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
   -- putStrLn $ show $ HashMap.containsKey "Jan" . fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
+  -- putStrLn "1:"
+  -- putStrLn $ debugShow $ AVLTree.fromList [(0,0)]
+  -- putStrLn "2:"
+  -- putStrLn $ debugShow $ AVLTree.fromList [(1,0),(0,0)]
+  -- putStrLn "3:"
+  -- putStrLn $ debugShow $ AVLTree.fromList [(0,0),(1,0),(0,0)]
+  -- putStrLn "4:"
+  -- putStrLn $ debugShow $ AVLTree.fromList [(0,0),(0,0),(1,0),(0,0)]
+  -- putStrLn "5:"
+  -- putStrLn $ debugShow $ AVLTree.fromList [(1,0),(0,0),(0,0),(1,0),(0,0)]
+  -- putStrLn "6:"
+  -- putStrLn $ debugShow $ AVLTree.fromList [(0,0),(1,0),(0,0),(0,0),(1,0),(0,0)]
+  putStrLn $ debugShow $ AVLTree.fromList [(-1,0),(-1,0),(0,0),(-1,0),(0,0),(-1,0)]
