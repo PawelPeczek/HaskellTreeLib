@@ -38,8 +38,8 @@ someFunc = do
   -- putStrLn $ show $ sortAVLAsc $ [7, 6, 9, 17, 99, -3, 26, 39]
   -- putStrLn "9:"
   -- putStrLn $ show $ sortAVLAsc $ [3, 7, 6, 9, 17, 99, -3, 26, 39]
-  putStrLn $ show $ getKeys . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
-  putStrLn $ show $ insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
-  putStrLn $ show $ getValues . fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
-  putStrLn $ show $ fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
-  putStrLn $ show $ HashMap.containsKey "Jan" . fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
+  -- putStrLn $ show $ getKeys . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
+  -- putStrLn $ show $ insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
+  -- putStrLn $ show $ getValues . fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
+  -- putStrLn $ show $ fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
+  -- putStrLn $ show $ HashMap.containsKey "Jan" . fst $ deleteFromHM "Jan" . insertKeyVal "Sławek" 188  . insertKeyVal "Wojtek" 252  . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38 . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap

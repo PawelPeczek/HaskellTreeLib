@@ -23,7 +23,7 @@ import AVLTree
 import Data.Hashable
 
 -- | Definition of basic structure used in HashMap
-data HashMap a b = HashMap (AVLTree (HashKey a) b) deriving(Show)
+data HashMap a b = HashMap (AVLTree (HashKey a) b)
 
 -- | Function that returns new empty 'HashMap'
 newHashMap :: HashMap a b
