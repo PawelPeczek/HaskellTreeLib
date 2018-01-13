@@ -13,7 +13,8 @@ module AVLTree (
           insert,
           insertKeyAsValue,
           debugShow,
-          depth
+          depth,
+          delete
         ) where
 
 import Stack
