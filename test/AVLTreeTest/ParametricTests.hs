@@ -26,6 +26,12 @@ prop_insertGeneratesValidTree = AVLTree.isValid . AVLTree.fromList
 
 prop_insertGeneratesTreeWithValidHeight = AVLTree.isValid' . AVLTree.fromList
 
+prop_deleteGeneratesValidTree xs = length xs /= 0 ==> do
+        toDelIdx <- choose (0, length xs - 1)
+        (toDel, _) <- return $ xs!!toDelIdx
+        return $ AVLTree.isValid . fst . AVLTree.delete toDel $ AVLTree.fromList xs
+
+
 prop_linearOrderIsOrdered = isOrdered . linearKeysOrder 
 
 prop_rightRotationPreservesOrdering xs =
