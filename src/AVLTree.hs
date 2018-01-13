@@ -199,18 +199,18 @@ insert' k v EmptyNode _ = (True, AVLNode k v (EmptyNode) (EmptyNode) Zero)
 insert' key val (AVLNode k v lt rt bc) mode =
   case (compare key k, mode) of
     (EQ, False) -> (False, AVLNode k val lt rt bc)
-    (EQ, True) -> insertRight key val (AVLNode k v lt rt bc) mode
-    (GT, _) -> insertRight key val (AVLNode k v lt rt bc) mode
-    (LT, _) -> insertLeft key val (AVLNode k v lt rt bc) mode
+    (EQ, True) -> insertRight
+    (GT, _) -> insertRight
+    (LT, _) -> insertLeft
   where
-    insertRight key val (AVLNode k v lt rt bc) mode =
+    insertRight =
       let (heighChange, newSubTree) = insert' key val rt mode in
       case (heighChange, bc) of
         (False, _) -> (False, AVLNode k v lt newSubTree bc)
         (True, Zero) -> (True, AVLNode k v lt newSubTree MinusOne)
         (True, PlusOne) -> (True, AVLNode k v lt newSubTree Zero)
         (True, MinusOne) -> (False, rightRotation (AVLNode k v lt newSubTree Zero))
-    insertLeft key val (AVLNode k v lt rt bc) mode =
+    insertLeft =
       let (heighChange, newSubTree) = insert' key val lt mode in
       case (heighChange, bc) of
         (False, _) -> (False, AVLNode k v newSubTree rt bc)
