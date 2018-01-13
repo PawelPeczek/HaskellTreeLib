@@ -32,7 +32,7 @@ insertToSet :: (Eq a, Hashable a) =>
   a -- ^ key
   -> HashSet a -- ^ 'HashSet a' to insert to
   -> HashSet a -- ^ 'HashSet a' after insertion
-insertToSet e (HashSet avl) = HashSet (insertKeyAsValue (prepeareKey e) avl)
+insertToSet e (HashSet avl) = HashSet (insertKeyAsValueSingleton (prepeareKey e) avl)
 
 -- | Function that returns all elements from HashSet - the order is random
 getElements :: (Eq a) =>
