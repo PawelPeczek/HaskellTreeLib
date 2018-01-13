@@ -83,15 +83,26 @@ debugShow :: (Show a, Show b) =>
   AVLTree a b-- ^ 'AVLTree a b' to be printed in debug mode
   -> String -- ^ String representation of tree
 debugShow EmptyNode = "(EmptyTree)"
-debugShow (AVLNode x d lt rt bc) =
-  "\n(" ++ show x ++ " [" ++ show bc ++ "] {data: " ++ show d ++ "}, " ++ debugShow lt ++ ", " ++ debugShow rt ++ ")"
+debugShow tree = debugShow' 0 tree
+    where
+        debugShow' shift EmptyNode = pad shift ++ "(EmptyNode)"
+        debugShow' shift t@(AVLNode x d lt rt bc) =
+            pad shift ++
+            "(" ++ show x ++
+            " [" ++ show bc ++ ", h" ++ (show $ height t) ++ "]" ++
+            "{data: " ++ show d ++ "}\n" ++
+            debugShow' (shift + 1) lt ++ "\n" ++
+            debugShow' (shift + 1) rt ++ "\n" ++
+            pad shift ++ ")"
+        pad sh = replicate sh ' '
+
 
 -- | Calculates the maximum height of a tree
 height :: AVLTree a b -> Int
 height EmptyNode = 0
 height (AVLNode _ _ lt rt _) = 1 + max (height lt) (height rt)
 
--- | Checks if a given tree is a valid AVL tree
+-- | Checks if given tree is a valid AVL tree
 isValid :: AVLTree a b -> Bool
 isValid EmptyNode = True
 isValid (AVLNode _ _ lt rt bc) = diff == numerizeBC bc
