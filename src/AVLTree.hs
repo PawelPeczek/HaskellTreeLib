@@ -208,14 +208,14 @@ insert' key val (AVLNode k v lt rt bc) mode =
       case (heighChange, bc) of
         (False, _) -> (False, AVLNode k v lt newSubTree bc)
         (True, Zero) -> (True, AVLNode k v lt newSubTree MinusOne)
-        (True, PlusOne) -> (True, AVLNode k v lt newSubTree Zero)
+        (True, PlusOne) -> (False, AVLNode k v lt newSubTree Zero)
         (True, MinusOne) -> (False, rightRotation (AVLNode k v lt newSubTree Zero))
     insertLeft =
       let (heighChange, newSubTree) = insert' key val lt mode in
       case (heighChange, bc) of
         (False, _) -> (False, AVLNode k v newSubTree rt bc)
         (True, Zero) -> (True, AVLNode k v newSubTree rt PlusOne)
-        (True, MinusOne) -> (True, AVLNode k v newSubTree rt Zero)
+        (True, MinusOne) -> (False, AVLNode k v newSubTree rt Zero)
         (True, PlusOne) -> (False, leftRotation (AVLNode k v newSubTree rt Zero))
 
 -- Function performs right AVL rotationions
@@ -335,7 +335,7 @@ delete' key (AVLNode k v lt rt bc) =
       case (heighChg, bc, getBC rt') of
         (False, _, _) -> (delV, (AVLNode k v lt rt' bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt rt' PlusOne), False)
-        (True, MinusOne, _) -> (delV, (AVLNode k v lt rt' Zero), True)
+        (True, MinusOne, _) -> (delV, (AVLNode k v lt rt' Zero), False)
         (True, PlusOne, Zero) -> (delV, llRotation (AVLNode k v lt rt' Zero), False)
         (True, PlusOne, PlusOne) -> (delV, llRotation (AVLNode k v lt rt' Zero), True)
         (True, PlusOne, MinusOne) -> (delV, lrRotation (AVLNode k v lt rt' Zero), True)
@@ -344,7 +344,7 @@ delete' key (AVLNode k v lt rt bc) =
       case (heighChg, bc, getBC lt') of
         (False, _, _) -> (delV, (AVLNode k v lt' rt bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt' rt MinusOne), False)
-        (True, PlusOne, _) -> (delV, (AVLNode k v lt' rt Zero), True)
+        (True, PlusOne, _) -> (delV, (AVLNode k v lt' rt Zero), False)
         (True, MinusOne, Zero) -> (delV, rrRotation (AVLNode k v lt' rt Zero), False)
         (True, MinusOne, MinusOne) -> (delV, rrRotation (AVLNode k v lt' rt Zero), True)
         (True, MinusOne, PlusOne) -> (delV, rlRotation (AVLNode k v lt' rt Zero), True)
