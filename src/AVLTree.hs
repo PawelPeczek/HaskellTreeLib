@@ -360,7 +360,7 @@ actualDelete (AVLNode k v (AVLNode lk lv llt lrt lbc) (AVLNode rk rv rlt rrt rbc
   let (v', t', heighChg) = delete' (getKey predecessor) (AVLNode lk lv llt lrt lbc) in
   case  (heighChg, bc) of
     (False, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) bc, False)
-    (True, Zero) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) PlusOne, False)
+    (True, Zero) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) MinusOne, False)
     (True, PlusOne) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero, False)
     -- rotation case -> now old node rt has bc +2 -> some right rotation
     (True, MinusOne) -> (v, rightRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
