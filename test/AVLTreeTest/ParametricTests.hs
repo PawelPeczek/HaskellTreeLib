@@ -4,6 +4,7 @@ module AVLTreeTest.ParametricTests where
 import Test.QuickCheck.All
 import Test.QuickCheck
 import AVLTree
+import AVLTree.Internal
 
 --newtype (Ord a) => OrdTree a b = OrdTree (AVLTree a b)
 
@@ -20,9 +21,9 @@ isOrdered (x:y:xs) = x <= y && isOrdered xs
 
 prop_singletonInsert_imdepotence k v t =
     classify (t == newTree) "empty tree" $
-    (insertSingleton k v $ insertSingleton k v t) == (insertSingleton k v t)
+    (insertUnique k v $ insertUnique k v t) == (insertUnique k v t)
 
-prop_insertGeneratesValidTree = AVLTree.isValid . AVLTree.fromList
+prop_insertGeneratesValidTree = AVLTree.Internal.isValid . AVLTree.fromList
 
 prop_linearOrderIsOrdered = isOrdered . linearKeysOrder
 
