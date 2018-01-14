@@ -4,6 +4,7 @@ module AVLTreeTest.ParametricTests where
 import Test.QuickCheck.All
 import Test.QuickCheck
 import AVLTree
+import AVLTree.Internal
 
 --newtype (Ord a) => OrdTree a b = OrdTree (AVLTree a b)
 
@@ -22,18 +23,17 @@ prop_singletonInsert_imdepotence k v t =
     classify (t == newTree) "empty tree" $
     (insertUnique k v $ insertUnique k v t) == (insertUnique k v t)
 
-prop_insertGeneratesValidTree = AVLTree.isValid . AVLTree.fromList
+prop_insertGeneratesValidTree = isValid . fromList
 
-prop_insertGeneratesTreeWithValidHeight = AVLTree.isValid' . AVLTree.fromList
+prop_insertGeneratesTreeWithValidHeight = isValid' . fromList
 
 prop_depthIsBoundedByLog xs = length xs > 0 ==>
-    depth (AVLTree.fromList xs) <= bound
+    depth (fromList xs) <= bound
     where bound = 1 + max 0 (ceiling $ logBase 2 (1.0 + (fromIntegral $ length xs)))
 
-prop_deleteGeneratesValidTree xs = length xs /= 0 ==> do
-        toDelIdx <- choose (0, length xs - 1)
-        (toDel, _) <- return $ xs!!toDelIdx
-        return $ AVLTree.isValid . fst . AVLTree.delete toDel $ AVLTree.fromList xs
+prop_deleteGeneratesValidTree xs n = n >= 0 && n < length xs ==>
+        let (toDel, _) = xs!!n  in
+        isValid . fst . delete toDel $ fromList xs
 
 
 prop_linearOrderIsOrdered = isOrdered . linearKeysOrder 

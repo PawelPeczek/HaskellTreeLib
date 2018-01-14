@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 394e1e528e73ef520c227e17da546b36ce4d16dda86a37cfa76aa26417a6f5c1
+-- hash: 33da8269783d50dfb3b78f1c1add3a613897d841f0aa02d4eef08086f18933f9
 
 name:           HaskellTreeLib
 version:        0.1.0.0
@@ -36,6 +36,7 @@ library
   exposed-modules:
       AVLSort
       AVLTree
+      AVLTree.Internal
       HashKey
       HashMap
       HashSet
