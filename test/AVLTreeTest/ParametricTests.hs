@@ -4,7 +4,6 @@ module AVLTreeTest.ParametricTests where
 import Test.QuickCheck.All
 import Test.QuickCheck
 import AVLTree
-import AVLTree.Internal
 
 --newtype (Ord a) => OrdTree a b = OrdTree (AVLTree a b)
 
@@ -21,72 +20,11 @@ isOrdered (x:y:xs) = x <= y && isOrdered xs
 
 prop_singletonInsert_imdepotence k v t =
     classify (t == newTree) "empty tree" $
-    (insertUnique k v $ insertUnique k v t) == (insertUnique k v t)
+    (insertSingleton k v $ insertSingleton k v t) == (insertSingleton k v t)
 
-prop_insertGeneratesValidTree = isValid . fromList
+prop_insertGeneratesValidTree = AVLTree.isValid . AVLTree.fromList
 
-prop_insertGeneratesTreeWithValidHeight = isValid' . fromList
-
-prop_depthIsBoundedByLog xs = length xs > 0 ==>
-    depth (fromList xs) <= bound
-    where bound = 1 + max 0 (ceiling $ logBase 2 (1.0 + (fromIntegral $ length xs)))
-
-prop_deleteGeneratesValidTree xs n = n >= 0 && n < length xs ==>
-        let (toDel, _) = xs!!n  in
-        isValid . fst . delete toDel $ fromList xs
-
-
-prop_linearOrderIsOrdered = isOrdered . linearKeysOrder 
-
-prop_rightRotationPreservesOrdering xs =
-    isValidInput tree ==>
-    isOrdered . linearKeysOrder . rightRotation $ tree
-    where tree = fromList xs
-          isValidInput EmptyNode = False
-          isValidInput (AVLNode _ _ _ EmptyNode _) = False
-          isValidInput _ = True
-
-prop_rrRotationPreservesOrdering xs =
-    isValidInput tree ==>
-    isOrdered . linearKeysOrder . rrRotation $ tree
-    where tree = fromList xs
-          isValidInput EmptyNode = False
-          isValidInput (AVLNode _ _ _ EmptyNode _) = False
-          isValidInput _ = True
-
-prop_leftRotationPreservesOrdering xs =
-    isValidInput tree ==>
-    isOrdered . linearKeysOrder . leftRotation $ tree
-    where tree = fromList xs
-          isValidInput EmptyNode = False
-          isValidInput (AVLNode _ _ EmptyNode _ _) = False
-          isValidInput _ = True
-
-prop_rlRotationPreservesOrdering xs =
-    isValidInput tree ==>
-    isOrdered . linearKeysOrder . rlRotation $ tree
-    where tree = fromList xs
-          isValidInput EmptyNode = False
-          isValidInput (AVLNode _ _ _ EmptyNode _) = False
-          isValidInput (AVLNode _ _ _ (AVLNode _ _ EmptyNode _ _) _) = False
-          isValidInput _ = True
-
-prop_lrRotationPreservesOrdering xs =
-    isValidInput tree ==>
-    isOrdered . linearKeysOrder . lrRotation $ tree
-    where tree = fromList xs
-          isValidInput EmptyNode = False
-          isValidInput (AVLNode _ _ EmptyNode _ _) = False
-          isValidInput (AVLNode _ _ (AVLNode _ _ _ EmptyNode _) _ _) = False
-          isValidInput _ = True
-
-prop_llRotationPreservesOrdering xs =
-    isValidInput tree ==>
-    isOrdered . linearKeysOrder . llRotation $ tree
-    where tree = fromList xs
-          isValidInput EmptyNode = False
-          isValidInput (AVLNode _ _ EmptyNode _ _) = False
-          isValidInput _ = True
+prop_linearOrderIsOrdered = isOrdered . linearKeysOrder
 
 --------------------------
 return []

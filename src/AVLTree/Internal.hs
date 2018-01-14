@@ -314,18 +314,18 @@ delete' key (AVLNode k v lt rt bc) =
         (False, _, _) -> (delV, (AVLNode k v lt rt' bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt rt' PlusOne), False)
         (True, MinusOne, _) -> (delV, (AVLNode k v lt rt' Zero), True)
-        (True, PlusOne, Just Zero) -> (delV, llRotation (AVLNode k v lt rt' Zero), False)
-        (True, PlusOne, Just PlusOne) -> (delV, llRotation (AVLNode k v lt rt' Zero), True)
-        (True, PlusOne, Just MinusOne) -> (delV, lrRotation (AVLNode k v lt rt' Zero), True)
+        (True, PlusOne, Zero) -> (delV, llRotation (AVLNode k v lt rt' Zero), False)
+        (True, PlusOne, PlusOne) -> (delV, llRotation (AVLNode k v lt rt' Zero), True)
+        (True, PlusOne, MinusOne) -> (delV, lrRotation (AVLNode k v lt rt' Zero), True)
     deleteLeft =
       let (delV, lt', heighChg) = delete' key lt in
       case (heighChg, bc, getBC rt) of
         (False, _, _) -> (delV, (AVLNode k v lt' rt bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt' rt MinusOne), False)
         (True, PlusOne, _) -> (delV, (AVLNode k v lt' rt Zero), True)
-        (True, MinusOne, Just Zero) -> (delV, rrRotation (AVLNode k v lt' rt Zero), False)
-        (True, MinusOne, Just MinusOne) -> (delV, rrRotation (AVLNode k v lt' rt Zero), True)
-        (True, MinusOne, Just PlusOne) -> (delV, rlRotation (AVLNode k v lt' rt Zero), True)
+        (True, MinusOne, Zero) -> (delV, rrRotation (AVLNode k v lt' rt Zero), False)
+        (True, MinusOne, MinusOne) -> (delV, rrRotation (AVLNode k v lt' rt Zero), True)
+        (True, MinusOne, PlusOne) -> (delV, rlRotation (AVLNode k v lt' rt Zero), True)
 
 -- | Function that performs actuall deletion of tree node
 -- to match the convention of delete' it returns
