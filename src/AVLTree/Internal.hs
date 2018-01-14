@@ -288,19 +288,19 @@ delete' key (AVLNode k v lt rt bc) =
   where
     deleteRight =
       let (delV, rt', heighChg) = delete' key rt in
-      case (heighChg, bc, getBC rt') of
+      case (heighChg, bc, getBC lt) of
         (False, _, _) -> (delV, (AVLNode k v lt rt' bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt rt' PlusOne), False)
-        (True, MinusOne, _) -> (delV, (AVLNode k v lt rt' Zero), False)
+        (True, MinusOne, _) -> (delV, (AVLNode k v lt rt' Zero), True)
         (True, PlusOne, Zero) -> (delV, llRotation (AVLNode k v lt rt' Zero), False)
         (True, PlusOne, PlusOne) -> (delV, llRotation (AVLNode k v lt rt' Zero), True)
         (True, PlusOne, MinusOne) -> (delV, lrRotation (AVLNode k v lt rt' Zero), True)
     deleteLeft =
       let (delV, lt', heighChg) = delete' key lt in
-      case (heighChg, bc, getBC lt') of
+      case (heighChg, bc, getBC rt) of
         (False, _, _) -> (delV, (AVLNode k v lt' rt bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt' rt MinusOne), False)
-        (True, PlusOne, _) -> (delV, (AVLNode k v lt' rt Zero), False)
+        (True, PlusOne, _) -> (delV, (AVLNode k v lt' rt Zero), True)
         (True, MinusOne, Zero) -> (delV, rrRotation (AVLNode k v lt' rt Zero), False)
         (True, MinusOne, MinusOne) -> (delV, rrRotation (AVLNode k v lt' rt Zero), True)
         (True, MinusOne, PlusOne) -> (delV, rlRotation (AVLNode k v lt' rt Zero), True)
@@ -314,12 +314,14 @@ actualDelete :: (Ord a) =>
   -> (b, AVLTree a b, Bool) -- ^ output as described above
 actualDelete (AVLNode k v (AVLNode lk lv llt lrt lbc) (AVLNode rk rv rlt rrt rbc) bc) =
   let (v', t', heighChg) = delete' (getKey predecessor) (AVLNode lk lv llt lrt lbc) in
-  case  (heighChg, bc) of
-    (False, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) bc, False)
-    (True, Zero) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) MinusOne, False)
-    (True, PlusOne) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero, False)
+  case  (heighChg, bc, rbc) of
+    (False, _, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) bc, False)
+    (True, Zero, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) MinusOne, False)
+    (True, PlusOne, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero, True)
     -- rotation case -> now old node rt has bc +2 -> some right rotation
-    (True, MinusOne) -> (v, rightRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
+    (True, MinusOne, Zero) -> (v, rrRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), False)
+    (True, MinusOne, MinusOne) -> (v, rrRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
+    (True, MinusOne, PlusOne) -> (v, rlRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
   where
     predecessor = getMaxElem (AVLNode lk lv llt lrt lbc)
 actualDelete (AVLNode k v EmptyNode (AVLNode rk rv rlt rrt rbc) bc) =
@@ -399,4 +401,3 @@ getValueOfKey k t =
 
 fromList :: Ord a => [(a, b)] -> AVLTree a b
 fromList = foldr (&:) newTree
-

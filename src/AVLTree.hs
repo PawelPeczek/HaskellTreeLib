@@ -32,4 +32,3 @@ instance Functor (AVLTree a) where
     fmap f EmptyNode = EmptyNode
     fmap f (AVLNode k v lt rt bc) =
         (AVLNode k (f v) (fmap f lt) (fmap f rt) bc)
-
