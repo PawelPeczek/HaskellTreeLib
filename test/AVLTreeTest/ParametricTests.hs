@@ -30,10 +30,9 @@ prop_depthIsBoundedByLog xs = length xs > 0 ==>
     depth (AVLTree.fromList xs) <= bound
     where bound = 1 + max 0 (ceiling $ logBase 2 (1.0 + (fromIntegral $ length xs)))
 
-prop_deleteGeneratesValidTree xs = length xs /= 0 ==> do
-        toDelIdx <- choose (0, length xs - 1)
-        (toDel, _) <- return $ xs!!toDelIdx
-        return $ AVLTree.isValid . fst . AVLTree.delete toDel $ AVLTree.fromList xs
+prop_deleteGeneratesValidTree xs n = n >= 0 && n < length xs ==>
+        let (toDel, _) = xs!!n  in
+        AVLTree.isValid . fst . AVLTree.delete toDel $ AVLTree.fromList xs
 
 
 prop_linearOrderIsOrdered = isOrdered . linearKeysOrder 
