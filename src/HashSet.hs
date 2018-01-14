@@ -39,7 +39,7 @@ getElements :: (Eq a) =>
   HashSet a -- ^ 'HashSet a' to take keys
   -> [a] -- ^ set of keys
 getElements (HashSet avl) =
-  foldr (\k xs -> (getOriginalKey k) : xs) [] (linearKeysOrder avl)
+  foldr (\k xs -> (getOriginalKey k) : xs) [] (keys avl)
 
 -- | Function that chechs whether HashSet contains given element
 containsElement :: (Hashable a, Eq a) =>

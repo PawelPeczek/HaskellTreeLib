@@ -56,7 +56,7 @@ getElement k (HashMap avl) =
 getKeys :: (Eq a) =>
   HashMap a b -- ^ 'HashMap a b' to take keys
   -> [a] -- ^ set of keys
-getKeys (HashMap avl) = loop (linearKeysOrder avl) []
+getKeys (HashMap avl) = loop (keys avl) []
   where
     loop [] acc = acc
     loop (x:xs) acc = loop xs ((getOriginalKey x) : acc)
@@ -65,7 +65,7 @@ getKeys (HashMap avl) = loop (linearKeysOrder avl) []
 getValues :: (Eq a) =>
   HashMap a b -- ^ 'HashMap a b' to take keys
   -> [b] -- ^ set of keys
-getValues (HashMap avl) = loop (linearOrder avl) []
+getValues (HashMap avl) = loop (values avl) []
     where
       loop [] acc = acc
       loop (x:xs) acc = loop xs (x : acc)

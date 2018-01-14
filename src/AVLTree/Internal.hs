@@ -56,6 +56,10 @@ instance (Show a, Show b) => Show (AVLTree a b) where
   -- AVL tree
   show (AVLNode x d lt rt _) = "(" ++ show x ++ " {data: " ++ show d ++ "} " ++ show lt ++ ", " ++ show rt ++ ")"
 
+instance (Ord a) => Foldable (AVLTree a) where
+    foldr f acc = foldr f acc . values
+    foldMap f = foldMap f . values
+
 -- | Debug function which provides a way to print additional info about balance
 -- coefficients of nodes
 debugShow :: (Show a, Show b) =>
@@ -90,55 +94,29 @@ isValid' (AVLNode _ _ lt rt bc) = diff `elem` [-1, 0, 1] && isValid' lt && isVal
 newTree :: AVLTree a b -- ^ Output: 'AVLTree a b' build with single EmptyNode
 newTree = EmptyNode
 
--- | Function returns list that consists of AVLTree values in ascending order of keys
-linearOrder :: (Ord a) =>
+-- | Function returns list that consists of AVLTree key value tuples.
+-- By using stack instead of concatenating lists the complexity of this
+-- operation is O(n).
+treeToList :: (Ord a) =>
   AVLTree a b -- ^ 'AVLTree a b' to linearize
-  -> [b] -- ^ 'List' of values in ascending order
-linearOrder EmptyNode = []
-linearOrder t = toList $ postorderWithStack t emptyStack
-
--- | Helper function that provides a way to make list of element in AVLTree
--- in O(n) time - as we always put element at the stack in O(1) instead
--- of simply concatenating lists at each of O(logN) levels in AVL Tree
--- Postorder -> to ensure correct order while popping from the "Stack" (FILO)
-postorderWithStack :: (Ord a) =>
-  AVLTree a b -- ^ 'AVLTree a b' to make operation on
-  -> Stack b -- ^ 'Stack b' to push values at
-  -> Stack b -- ^ 'Stack b' - function output
-postorderWithStack EmptyNode x = x
-postorderWithStack (AVLNode _ n lt rt _) x =
-  (postorderWithStack lt) $ (push n) $ (postorderWithStack rt x)
-
--- | Function returns list that consists of AVLTree values in descending order of keys
-reversedOrder :: (Ord a) =>
-  AVLTree a b -- ^ 'AVLTree a b' to linearize
-  -> [b] -- ^ Output 'List'
-reversedOrder = (reverse . linearOrder)
+  -> [(a, b)] -- ^ 'List' of values in key ascending order
+treeToList EmptyNode = []
+treeToList t = Stack.toList $ toStack t emptyStack
+    where toStack EmptyNode x = x
+          toStack (AVLNode k n lt rt _) x =
+            (toStack lt) $ (push (k, n)) $ (toStack rt x)
 
 -- | Function that returns list of keys in AVLTree in ascending order
-linearKeysOrder :: (Ord a) =>
+keys :: (Ord a) =>
   AVLTree a b -- ^ 'AVLTree a b' to linearize
   -> [a] -- ^ 'List' of keys in ascending order
-linearKeysOrder EmptyNode = []
-linearKeysOrder t = toList $ postorderKeysWithStack t emptyStack
+keys = map (\(k, _) -> k) . treeToList
 
--- | Helper function that provides a way to make list of keys in AVLTree
--- in O(n) time - as we always put element at the stack in O(1) instead
--- of simply concatenating lists at each of O(logN) levels in AVL Tree
--- Postorder -> to ensure correct order while popping from the "Stack" (FILO)
-postorderKeysWithStack :: (Ord a) =>
-  AVLTree a b -- ^ 'AVLTree a b' to make operation on
-  -> Stack a -- ^ 'Stack b' to push values at
-  -> Stack a -- ^ 'Stack b' - function output
-postorderKeysWithStack EmptyNode x = x
-postorderKeysWithStack (AVLNode n _ lt rt _) x =
-  (postorderKeysWithStack lt) $ (push n) $ (postorderKeysWithStack rt x)
-
--- | Function returns list that consists of AVLTree keys in descending order of keys
-reversedKeysOrder :: (Ord a) =>
+-- | Function that returns list of values in AVLTree in key ascending order
+values :: (Ord a) =>
   AVLTree a b -- ^ 'AVLTree a b' to linearize
-  -> [a] -- ^ Output 'List'
-reversedKeysOrder = (reverse . linearKeysOrder)
+  -> [b] -- ^ 'List' of keys in ascending order
+values = map (\(_, v) -> v) . treeToList
 
 -- | Function that insert an element key of type a and value of type b into the AVLTree a b.
 -- This version of insert function provides a straightforward insert

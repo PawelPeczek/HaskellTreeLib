@@ -35,12 +35,15 @@ prop_deleteGeneratesValidTree xs n = n >= 0 && n < length xs ==>
         let (toDel, _) = xs!!n  in
         isValid . fst . delete toDel $ fromList xs
 
+prop_deleteGeneratesValidDepthTree xs n = n >= 0 && n < length xs ==>
+        let (toDel, _) = xs!!n  in
+        isValid' . fst . delete toDel $ fromList xs
 
-prop_linearOrderIsOrdered = isOrdered . linearKeysOrder 
+prop_toListIsOrdered = isOrdered . keys 
 
 prop_rightRotationPreservesOrdering xs =
     isValidInput tree ==>
-    isOrdered . linearKeysOrder . rightRotation $ tree
+    isOrdered . keys . rightRotation $ tree
     where tree = fromList xs
           isValidInput EmptyNode = False
           isValidInput (AVLNode _ _ _ EmptyNode _) = False
@@ -48,7 +51,7 @@ prop_rightRotationPreservesOrdering xs =
 
 prop_rrRotationPreservesOrdering xs =
     isValidInput tree ==>
-    isOrdered . linearKeysOrder . rrRotation $ tree
+    isOrdered . keys . rrRotation $ tree
     where tree = fromList xs
           isValidInput EmptyNode = False
           isValidInput (AVLNode _ _ _ EmptyNode _) = False
@@ -56,7 +59,7 @@ prop_rrRotationPreservesOrdering xs =
 
 prop_leftRotationPreservesOrdering xs =
     isValidInput tree ==>
-    isOrdered . linearKeysOrder . leftRotation $ tree
+    isOrdered . keys . leftRotation $ tree
     where tree = fromList xs
           isValidInput EmptyNode = False
           isValidInput (AVLNode _ _ EmptyNode _ _) = False
@@ -64,7 +67,7 @@ prop_leftRotationPreservesOrdering xs =
 
 prop_rlRotationPreservesOrdering xs =
     isValidInput tree ==>
-    isOrdered . linearKeysOrder . rlRotation $ tree
+    isOrdered . keys . rlRotation $ tree
     where tree = fromList xs
           isValidInput EmptyNode = False
           isValidInput (AVLNode _ _ _ EmptyNode _) = False
@@ -73,7 +76,7 @@ prop_rlRotationPreservesOrdering xs =
 
 prop_lrRotationPreservesOrdering xs =
     isValidInput tree ==>
-    isOrdered . linearKeysOrder . lrRotation $ tree
+    isOrdered . keys . lrRotation $ tree
     where tree = fromList xs
           isValidInput EmptyNode = False
           isValidInput (AVLNode _ _ EmptyNode _ _) = False
@@ -82,7 +85,7 @@ prop_lrRotationPreservesOrdering xs =
 
 prop_llRotationPreservesOrdering xs =
     isValidInput tree ==>
-    isOrdered . linearKeysOrder . llRotation $ tree
+    isOrdered . keys . llRotation $ tree
     where tree = fromList xs
           isValidInput EmptyNode = False
           isValidInput (AVLNode _ _ EmptyNode _ _) = False

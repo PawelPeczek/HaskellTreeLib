@@ -25,4 +25,4 @@ sortAVLAsc :: Ord a =>
   -> [a]-- ^ sorted (ASC) input list
 sortAVLAsc [] = []
 sortAVLAsc xs =
-   linearKeysOrder . foldr insertKeyAsValue newTree $ xs
+   keys . foldr insertKeyAsValue newTree $ xs
