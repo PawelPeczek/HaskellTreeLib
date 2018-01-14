@@ -54,7 +54,17 @@ instance (Show a, Show b) => Show (AVLTree a b) where
   show EmptyNode = "(EmptyTree)"
   -- | The AVLNode case. Point that this function will recursively process whole
   -- AVL tree
-  show (AVLNode x d lt rt _) = "(" ++ show x ++ " {data: " ++ show d ++ "} " ++ show lt ++ ", " ++ show rt ++ ")"
+  show tree = show' 0 tree
+      where
+          show' shift EmptyNode = pad shift ++ "(EmptyTree)"
+          show' shift t@(AVLNode x d lt rt bc) =
+              pad shift ++
+              "(" ++ show x ++ " " ++
+              "{data: " ++ show d ++ "}\n" ++
+              show' (shift + 1) lt ++ "\n" ++
+              show' (shift + 1) rt ++ "\n" ++
+              pad shift ++ ")"
+          pad sh = replicate sh ' '
 
 instance (Ord a) => Foldable (AVLTree a) where
     foldr f acc = foldr f acc . values
