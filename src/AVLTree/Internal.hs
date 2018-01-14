@@ -179,8 +179,8 @@ rightRotation ::
   AVLTree a b -- ^ (AVLTree a b) to operate on
   -> AVLTree a b -- ^ (AVLTree a b) after operation
 rightRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc) =
-  case numerizeBC bbc of
-    1 -> rlRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc)
+  case bbc of
+    PlusOne -> rlRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc)
     otherwise -> rrRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc)
 
 -- Function performs left AVL rotationions
@@ -188,8 +188,8 @@ leftRotation ::
   AVLTree a b -- ^ (AVLTree a b) to operate on
   -> AVLTree a b -- ^ (AVLTree a b) after operation
 leftRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
-  case numerizeBC bbc of
-    -1 -> lrRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
+  case bbc of
+    MinusOne -> lrRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
     otherwise -> llRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
 
 -- | Function that provides an implementation for RR AVLTree Rotations
@@ -201,8 +201,8 @@ rrRotation EmptyNode = EmptyNode
 rrRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc) =
   AVLNode bk bv (AVLNode ak av alt blt newABC) brt newBBC
   where
-    newABC = if numerizeBC bbc == -1 then Zero else MinusOne
-    newBBC = if numerizeBC bbc == -1 then Zero else PlusOne
+    newABC = if bbc == MinusOne then Zero else MinusOne
+    newBBC = if bbc == MinusOne then Zero else PlusOne
 
 -- | Function that provides an implementation for LL AVLTree Rotations
 -- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
@@ -213,8 +213,8 @@ llRotation EmptyNode = EmptyNode
 llRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
   AVLNode bk bv blt (AVLNode ak av brt art newABC) newBBC
   where
-    newABC = if numerizeBC bbc == 1 then Zero else PlusOne
-    newBBC = if numerizeBC bbc == 1 then Zero else MinusOne
+    newABC = if bbc == PlusOne then Zero else PlusOne
+    newBBC = if bbc == PlusOne then Zero else MinusOne
 
 
 -- | Function that provides an implementation for RL AVLTree Rotations
@@ -226,8 +226,8 @@ rlRotation EmptyNode = EmptyNode
 rlRotation (AVLNode ak av alt (AVLNode bk bv (AVLNode ck cv clt crt cbc) brt bbc) abc) =
   AVLNode ck cv (AVLNode ak av alt clt newABC) (AVLNode bk bv crt brt newBBC) Zero
   where
-    newABC = if numerizeBC cbc == -1 then PlusOne else Zero
-    newBBC = if numerizeBC cbc == 1 then MinusOne else Zero
+    newABC = if cbc == MinusOne then PlusOne else Zero
+    newBBC = if cbc == PlusOne then MinusOne else Zero
 
 -- | Function that provides an implementation for RL AVLTree Rotations
 -- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
@@ -238,8 +238,8 @@ lrRotation EmptyNode = EmptyNode
 lrRotation (AVLNode ak av (AVLNode bk bv blt (AVLNode ck cv clt crt cbc) bbc) art abc) =
   AVLNode ck cv (AVLNode bk bv blt clt newBBC) (AVLNode ak av crt art newABC) Zero
   where
-    newABC = if numerizeBC cbc == 1 then MinusOne else Zero
-    newBBC = if numerizeBC cbc == -1 then PlusOne else Zero
+    newABC = if cbc == PlusOne then MinusOne else Zero
+    newBBC = if cbc == MinusOne then PlusOne else Zero
 
 
 -- | Function that performs delete operation at AVL Tree
