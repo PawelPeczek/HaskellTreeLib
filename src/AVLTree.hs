@@ -327,10 +327,10 @@ delete' :: Ord a =>
 delete' key (AVLNode k v lt rt bc) =
   case compare key k of
     EQ -> actualDelete (AVLNode k v lt rt bc)
-    GT -> deleteRight key (AVLNode k v lt rt bc)
-    LT -> deleteLeft key (AVLNode k v lt rt bc)
+    GT -> deleteRight
+    LT -> deleteLeft
   where
-    deleteRight key (AVLNode k v lt rt bc) =
+    deleteRight =
       let (delV, rt', heighChg) = delete' key rt in
       case (heighChg, bc, getBC rt') of
         (False, _, _) -> (delV, (AVLNode k v lt rt' bc), False)
@@ -339,7 +339,7 @@ delete' key (AVLNode k v lt rt bc) =
         (True, PlusOne, Zero) -> (delV, llRotation (AVLNode k v lt rt' Zero), False)
         (True, PlusOne, PlusOne) -> (delV, llRotation (AVLNode k v lt rt' Zero), True)
         (True, PlusOne, MinusOne) -> (delV, lrRotation (AVLNode k v lt rt' Zero), True)
-    deleteLeft key (AVLNode k v lt rt bc) =
+    deleteLeft =
       let (delV, lt', heighChg) = delete' key lt in
       case (heighChg, bc, getBC lt') of
         (False, _, _) -> (delV, (AVLNode k v lt' rt bc), False)

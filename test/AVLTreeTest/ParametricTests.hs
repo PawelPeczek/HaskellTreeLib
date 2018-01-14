@@ -26,6 +26,10 @@ prop_insertGeneratesValidTree = AVLTree.isValid . AVLTree.fromList
 
 prop_insertGeneratesTreeWithValidHeight = AVLTree.isValid' . AVLTree.fromList
 
+prop_depthIsBoundedByLog xs = length xs > 0 ==>
+    depth (AVLTree.fromList xs) <= bound
+    where bound = 1 + max 0 (ceiling $ logBase 2 (1.0 + (fromIntegral $ length xs)))
+
 prop_deleteGeneratesValidTree xs = length xs /= 0 ==> do
         toDelIdx <- choose (0, length xs - 1)
         (toDel, _) <- return $ xs!!toDelIdx
