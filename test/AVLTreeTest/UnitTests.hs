@@ -49,10 +49,10 @@ test_llRotation = TestCase $ do
                 Zero)
             MinusOne)
         MinusOne)
-    assertEqual "RR rotation failed" expected (llRotation validTree)
+    assertEqual "LL rotation failed" expected (llRotation validTree)
 
 rotationTests = TestLabel "Rotation testss" (TestList [
-        test_rrRotation
+        test_llRotation
     ])
 
 
