@@ -55,4 +55,4 @@ someFunc = do
   -- putStrLn $ debugShow $ AVLTree.fromList [(1,0),(0,0),(0,0),(1,0),(0,0)]
   -- putStrLn "6:"
   -- putStrLn $ debugShow $ AVLTree.fromList [(0,0),(1,0),(0,0),(0,0),(1,0),(0,0)]
-  putStrLn $ debugShow $ AVLTree.fromList [(-1,0),(-1,0),(0,0),(-1,0),(0,0),(-1,0)]
+  --putStrLn $ debugShow $ AVLTree.fromList [(-1,0),(-1,0),(0,0),(-1,0),(0,0),(-1,0)]
