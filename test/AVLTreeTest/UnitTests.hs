@@ -1,38 +1,62 @@
 module AVLTreeTest.UnitTests (
-    test1
+    unitTests
     ) where
 
 import Test.HUnit
 
 import AVLTree
+import AVLTree.Internal
+
+validTree = 
+        (AVLNode 0 0
+            (AVLNode (-5) (-5)
+                (AVLNode (-10) (-10) EmptyNode EmptyNode Zero)
+                (AVLNode (-3) (-3) EmptyNode EmptyNode Zero)
+            Zero)
+            (AVLNode 5 5
+                (AVLNode 3 3 EmptyNode EmptyNode Zero)
+                (AVLNode 10 10 EmptyNode EmptyNode Zero)
+            Zero)
+        Zero)
+
+test_isValidDetectsInvalidTree = TestCase (do
+    t <- return (AVLNode 2 1 (AVLNode 1 0 (AVLNode 0 0 EmptyNode EmptyNode Zero) EmptyNode MinusOne) EmptyNode Zero)
+    assertEqual "Invalid tree not detected"  False (isValid  t)
+    )
+
+test_isValidDetectsValidTree = TestCase $ do
+    t <- return validTree
+    assertEqual "Valid tree should pass isValid" True (isValid  t)
 
 
-foo :: Int -> (Int, Int)
-foo x = (1, x)
+validityTests = TestLabel "Tests of validity checks" (TestList [
+        test_isValidDetectsInvalidTree,
+        test_isValidDetectsValidTree
+    ])
 
-partA :: Int -> IO (Int, Int)
-partA v = return (v+2, v+3)
+test_llRotation = TestCase $ do
+    expected <- return $ 
+        (AVLNode (-5) (-5)
+            (AVLNode (-10) (-10)
+                EmptyNode
+                EmptyNode
+            Zero)
+            (AVLNode 0 0
+                (AVLNode (-3) (-3) EmptyNode EmptyNode Zero)
+                (AVLNode 5 5 
+                    (AVLNode 3 3 EmptyNode EmptyNode Zero)
+                    (AVLNode 10 10 EmptyNode EmptyNode Zero)
+                Zero)
+            MinusOne)
+        MinusOne)
+    assertEqual "RR rotation failed" expected (llRotation validTree)
 
-partB :: Int -> IO Bool
-partB v = return (v > 5)
+rotationTests = TestLabel "Rotation testss" (TestList [
+        test_rrRotation
+    ])
 
-test1 :: Test
-test1 = TestCase (assertEqual "for (foo 3)," (1,2) (foo 3))
 
-test2 :: Test
-test2 = TestCase (do (x,y) <- partA 3
-                     assertEqual "for the first result of partA," 5 x
-                     b <- partB y
-                     assertBool ("(partB " ++ show y ++ ") failed") b)
-
-tests :: Test
-tests = TestList [TestLabel "test1" test1, TestLabel "test2" test2]
-
-tests' :: Test
-tests' = test [ "test1" ~: "(foo 3)" ~: (1,2) ~=? (foo 3),
-                "test2" ~: do (x, y) <- partA 3
-                              assertEqual "for the first result of partA," 5 x
-                              partB y @? "(partB " ++ show y ++ ") failed" ]
+unitTests = TestList [validityTests, rotationTests]
 
 --main :: IO Counts
 --main = do _ <- runTestTT tests

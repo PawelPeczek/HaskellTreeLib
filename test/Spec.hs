@@ -6,8 +6,10 @@ import Test.QuickCheck.All
 
 import AVLTree
 import AVLTreeTest.ParametricTests as ParametricTests
+import AVLTreeTest.UnitTests as UnitTests
+
 
 --main :: IO ()
-main = do --runTestTT tests
+main = do runTestTT UnitTests.unitTests
           ParametricTests.runTests
 
