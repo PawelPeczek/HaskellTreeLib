@@ -203,7 +203,7 @@ leftRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
     otherwise -> llRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
 
 -- | Function that provides an implementation for RR AVLTree Rotations
--- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+-- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
 rrRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
@@ -215,7 +215,7 @@ rrRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc) =
     newBBC = if bbc == MinusOne then Zero else PlusOne
 
 -- | Function that provides an implementation for LL AVLTree Rotations
--- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+-- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
 llRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
@@ -228,7 +228,7 @@ llRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
 
 
 -- | Function that provides an implementation for RL AVLTree Rotations
--- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+-- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
 rlRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
@@ -240,7 +240,7 @@ rlRotation (AVLNode ak av alt (AVLNode bk bv (AVLNode ck cv clt crt cbc) brt bbc
     newBBC = if cbc == PlusOne then MinusOne else Zero
 
 -- | Function that provides an implementation for RL AVLTree Rotations
--- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+-- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
 lrRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
