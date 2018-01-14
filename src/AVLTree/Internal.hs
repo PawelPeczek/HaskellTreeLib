@@ -175,77 +175,77 @@ insert' key val (AVLNode k v lt rt bc) mode =
         (False, _) -> (False, AVLNode k v lt newSubTree bc)
         (True, Zero) -> (True, AVLNode k v lt newSubTree MinusOne)
         (True, PlusOne) -> (False, AVLNode k v lt newSubTree Zero)
-        (True, MinusOne) -> (False, rightRotation (AVLNode k v lt newSubTree Zero))
+        (True, MinusOne) -> (False, leftRotation (AVLNode k v lt newSubTree Zero))
     insertLeft =
       let (heighChange, newSubTree) = insert' key val lt mode in
       case (heighChange, bc) of
         (False, _) -> (False, AVLNode k v newSubTree rt bc)
         (True, Zero) -> (True, AVLNode k v newSubTree rt PlusOne)
         (True, MinusOne) -> (False, AVLNode k v newSubTree rt Zero)
-        (True, PlusOne) -> (False, leftRotation (AVLNode k v newSubTree rt Zero))
-
--- Function performs right AVL rotationions
-rightRotation ::
-  AVLTree a b -- ^ (AVLTree a b) to operate on
-  -> AVLTree a b -- ^ (AVLTree a b) after operation
-rightRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc) =
-  case bbc of
-    PlusOne -> rlRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc)
-    otherwise -> rrRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc)
+        (True, PlusOne) -> (False, rightRotation (AVLNode k v newSubTree rt Zero))
 
 -- Function performs left AVL rotationions
 leftRotation ::
   AVLTree a b -- ^ (AVLTree a b) to operate on
   -> AVLTree a b -- ^ (AVLTree a b) after operation
-leftRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
+leftRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc) =
   case bbc of
-    MinusOne -> lrRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
-    otherwise -> llRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
+    PlusOne -> lrRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc)
+    otherwise -> llRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc)
 
--- | Function that provides an implementation for RR AVLTree Rotations
--- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
-rrRotation ::
+-- Function performs right AVL rotationions
+rightRotation ::
+  AVLTree a b -- ^ (AVLTree a b) to operate on
+  -> AVLTree a b -- ^ (AVLTree a b) after operation
+rightRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
+  case bbc of
+    MinusOne -> rlRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
+    otherwise -> rrRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc)
+
+-- | Function that provides an implementation for LL AVLTree Rotations
+-- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+llRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
-rrRotation EmptyNode = EmptyNode
-rrRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc) =
+llRotation EmptyNode = EmptyNode
+llRotation (AVLNode ak av alt (AVLNode bk bv blt brt bbc) abc) =
   AVLNode bk bv (AVLNode ak av alt blt newABC) brt newBBC
   where
     newABC = if bbc == MinusOne then Zero else MinusOne
     newBBC = if bbc == MinusOne then Zero else PlusOne
 
--- | Function that provides an implementation for LL AVLTree Rotations
--- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
-llRotation ::
+-- | Function that provides an implementation for RR AVLTree Rotations
+-- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+rrRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
-llRotation EmptyNode = EmptyNode
-llRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
+rrRotation EmptyNode = EmptyNode
+rrRotation (AVLNode ak av (AVLNode bk bv blt brt bbc) art abc) =
   AVLNode bk bv blt (AVLNode ak av brt art newABC) newBBC
   where
     newABC = if bbc == PlusOne then Zero else PlusOne
     newBBC = if bbc == PlusOne then Zero else MinusOne
 
 
--- | Function that provides an implementation for RL AVLTree Rotations
--- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
-rlRotation ::
+-- | Function that provides an implementation for LR AVLTree Rotations
+-- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+lrRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
-rlRotation EmptyNode = EmptyNode
-rlRotation (AVLNode ak av alt (AVLNode bk bv (AVLNode ck cv clt crt cbc) brt bbc) abc) =
+lrRotation EmptyNode = EmptyNode
+lrRotation (AVLNode ak av alt (AVLNode bk bv (AVLNode ck cv clt crt cbc) brt bbc) abc) =
   AVLNode ck cv (AVLNode ak av alt clt newABC) (AVLNode bk bv crt brt newBBC) Zero
   where
     newABC = if cbc == MinusOne then PlusOne else Zero
     newBBC = if cbc == PlusOne then MinusOne else Zero
 
 -- | Function that provides an implementation for RL AVLTree Rotations
--- see details: http://eduinf.waw.pl/inf/alg/001_search/0119.php
-lrRotation ::
+-- see details: https://www.cise.ufl.edu/~nemo/cop3530/AVL-Tree-Rotations.pdf
+rlRotation ::
   AVLTree a b -- ^ main AVL Tree node to rotate
   -> AVLTree a b -- ^ AVL Ttree node after rotation
-lrRotation EmptyNode = EmptyNode
-lrRotation (AVLNode ak av (AVLNode bk bv blt (AVLNode ck cv clt crt cbc) bbc) art abc) =
+rlRotation EmptyNode = EmptyNode
+rlRotation (AVLNode ak av (AVLNode bk bv blt (AVLNode ck cv clt crt cbc) bbc) art abc) =
   AVLNode ck cv (AVLNode bk bv blt clt newBBC) (AVLNode ak av crt art newABC) Zero
   where
     newABC = if cbc == PlusOne then MinusOne else Zero
@@ -302,18 +302,18 @@ delete' key (AVLNode k v lt rt bc) =
         (False, _, _) -> (delV, (AVLNode k v lt rt' bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt rt' PlusOne), False)
         (True, MinusOne, _) -> (delV, (AVLNode k v lt rt' Zero), True)
-        (True, PlusOne, Zero) -> (delV, llRotation (AVLNode k v lt rt' Zero), False)
-        (True, PlusOne, PlusOne) -> (delV, llRotation (AVLNode k v lt rt' Zero), True)
-        (True, PlusOne, MinusOne) -> (delV, lrRotation (AVLNode k v lt rt' Zero), True)
+        (True, PlusOne, Zero) -> (delV, rrRotation (AVLNode k v lt rt' Zero), False)
+        (True, PlusOne, PlusOne) -> (delV, rrRotation (AVLNode k v lt rt' Zero), True)
+        (True, PlusOne, MinusOne) -> (delV, rlRotation (AVLNode k v lt rt' Zero), True)
     deleteLeft =
       let (delV, lt', heighChg) = delete' key lt in
       case (heighChg, bc, getBC rt) of
         (False, _, _) -> (delV, (AVLNode k v lt' rt bc), False)
         (True, Zero, _) -> (delV, (AVLNode k v lt' rt MinusOne), False)
         (True, PlusOne, _) -> (delV, (AVLNode k v lt' rt Zero), True)
-        (True, MinusOne, Zero) -> (delV, rrRotation (AVLNode k v lt' rt Zero), False)
-        (True, MinusOne, MinusOne) -> (delV, rrRotation (AVLNode k v lt' rt Zero), True)
-        (True, MinusOne, PlusOne) -> (delV, rlRotation (AVLNode k v lt' rt Zero), True)
+        (True, MinusOne, Zero) -> (delV, llRotation (AVLNode k v lt' rt Zero), False)
+        (True, MinusOne, MinusOne) -> (delV, llRotation (AVLNode k v lt' rt Zero), True)
+        (True, MinusOne, PlusOne) -> (delV, lrRotation (AVLNode k v lt' rt Zero), True)
 
 -- | Function that performs actuall deletion of tree node
 -- to match the convention of delete' it returns
@@ -329,9 +329,9 @@ actualDelete (AVLNode k v (AVLNode lk lv llt lrt lbc) (AVLNode rk rv rlt rrt rbc
     (True, Zero, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) MinusOne, False)
     (True, PlusOne, _) -> (v, AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero, True)
     -- rotation case -> now old node rt has bc +2 -> some right rotation
-    (True, MinusOne, Zero) -> (v, rrRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), False)
-    (True, MinusOne, MinusOne) -> (v, rrRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
-    (True, MinusOne, PlusOne) -> (v, rlRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
+    (True, MinusOne, Zero) -> (v, llRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), False)
+    (True, MinusOne, MinusOne) -> (v, llRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
+    (True, MinusOne, PlusOne) -> (v, lrRotation (AVLNode (getKey predecessor) v' t' (AVLNode rk rv rlt rrt rbc) Zero), True)
   where
     predecessor = getMaxElem (AVLNode lk lv llt lrt lbc)
 actualDelete (AVLNode k v EmptyNode (AVLNode rk rv rlt rrt rbc) bc) =
