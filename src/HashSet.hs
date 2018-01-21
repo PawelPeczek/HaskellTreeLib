@@ -32,7 +32,7 @@ insertToSet :: (Eq a, Hashable a) =>
   a -- ^ key
   -> HashSet a -- ^ 'HashSet a' to insert to
   -> HashSet a -- ^ 'HashSet a' after insertion
-insertToSet e (HashSet avl) = HashSet (insertKeyAsValueUnique (prepeareKey e) avl)
+insertToSet e (HashSet avl) = HashSet (insertKeyAsValueUnique (prepareKey e) avl)
 
 -- | Function that returns all elements from HashSet - the order is random
 getElements :: (Eq a) =>
@@ -46,7 +46,7 @@ containsElement :: (Hashable a, Eq a) =>
   a -- ^ element of type a to check
   -> HashSet a -- ^ given 'HashSet a'
   -> Bool -- ^ result of check
-containsElement k (HashSet avl) = containsKey (prepeareKey k) avl
+containsElement k (HashSet avl) = containsKey (prepareKey k) avl
 
 -- | Function deletes key and value from given HashSet and returns
 -- pair (HashSet, Maybe elem) - so in case of success - the HashSet after
@@ -61,4 +61,4 @@ deleteElement k (HashSet avl) =
     Nothing -> (HashSet avl', Nothing)
     _ -> (HashSet avl', delV)
   where
-    (avl', delV) = delete (prepeareKey k) avl
+    (avl', delV) = delete (prepareKey k) avl

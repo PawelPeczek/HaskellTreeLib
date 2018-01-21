@@ -35,7 +35,7 @@ insertKeyVal :: (Eq a, Hashable a) =>
   -> b -- ^ value
   -> HashMap a b -- ^ 'HashMap a b' to insert to
   -> HashMap a b -- ^ 'HashMap a b' after insertion
-insertKeyVal k v (HashMap avl) = HashMap (insertUnique (prepeareKey k) v avl)
+insertKeyVal k v (HashMap avl) = HashMap (insertUnique (prepareKey k) v avl)
 
 -- | Function that get element with a given key from given HashMap
 -- without deleting it. The function returns (HashMap, Maybe value)
@@ -50,7 +50,7 @@ getElement k (HashMap avl) =
       Nothing -> (HashMap avl', Nothing)
       _ -> (HashMap avl', foundV)
     where
-      (avl', foundV) = getValueOfKey (prepeareKey k) avl
+      (avl', foundV) = getValueOfKey (prepareKey k) avl
 
 -- | Function that returns key set from HashMap - the order is random
 getKeys :: (Eq a) =>
@@ -75,7 +75,7 @@ containsKey :: (Hashable a, Eq a) =>
   a -- ^ Key of type a to check
   -> HashMap a b -- ^ given 'HashMap a b'
   -> Bool -- ^ result of check
-containsKey k (HashMap avl) = AVLTree.containsKey (prepeareKey k) avl
+containsKey k (HashMap avl) = AVLTree.containsKey (prepareKey k) avl
 
 -- | Function deletes key and value from given HashMap and returns
 -- pair (HashMap, Maybe elem) - so in case of success - the HashMap after
@@ -90,4 +90,4 @@ deleteFromHM k (HashMap avl) =
     Nothing -> (HashMap avl', Nothing)
     _ -> (HashMap avl', delV)
   where
-    (avl', delV) = delete (prepeareKey k) avl
+    (avl', delV) = delete (prepareKey k) avl

@@ -11,7 +11,7 @@ Copyright   : (c) Wojciech Geisler, 2018
 module HashKey
     (
       HashKey,
-      prepeareKey,
+      prepareKey,
       getOriginalKey,
     ) where
 
@@ -29,13 +29,13 @@ instance Eq a => Ord (HashKey a) where
     i1 < i2 || (HashKey (i1, v1)) == (HashKey (i2, v2))
 
 -- | Function that prepare hey
-prepeareKey :: (Hashable a, Eq a) =>
+prepareKey :: (Hashable a, Eq a) =>
   a -- ^ Value to be hashed
   -> HashKey a -- ^ Key prepared to be used in HashMap/HashSet
-prepeareKey v = HashKey (hash v, v)
+prepareKey v = HashKey (hash v, v)
 
 -- | Function that returns original key that was given as an argument of
--- function prepeareKey
+-- function prepareKey
 getOriginalKey ::
   HashKey a -- ^ hashed key to unpack
   -> a -- ^ Original key
