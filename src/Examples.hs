@@ -40,7 +40,7 @@ hashMapExample1 = do
   putStrLn "Creating HashMap from data: (Sławek 188), \
            \ (Wojtek 252), (Jan 388), (Dominik 38), \
            \ (Kaswery 88), (Jan 19) [reversed insertion order]"
-  hm <- return $ insertKeyVal "Slawek" 188  . insertKeyVal "Wojtek" 252
+  let hm = insertKeyVal "Slawek" 188  . insertKeyVal "Wojtek" 252
         . insertKeyVal "Jan" 388 . insertKeyVal "Diminik" 38
         . insertKeyVal "Ksawery" 88 . insertKeyVal "Jan" 19 $ newHashMap
   putStrLn "Checking keys:"

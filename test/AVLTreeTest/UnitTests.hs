@@ -35,24 +35,34 @@ validityTests = TestLabel "Tests of validity checks" (TestList [
     ])
 
 test_llRotation = TestCase $ do
-    expected <- return $ 
-        (AVLNode (-5) (-5)
-            (AVLNode (-10) (-10)
-                EmptyNode
-                EmptyNode
-            Zero)
-            (AVLNode 0 0
-                (AVLNode (-3) (-3) EmptyNode EmptyNode Zero)
-                (AVLNode 5 5 
-                    (AVLNode 3 3 EmptyNode EmptyNode Zero)
-                    (AVLNode 10 10 EmptyNode EmptyNode Zero)
-                Zero)
-            MinusOne)
-        MinusOne)
-    assertEqual "LL rotation failed" expected (llRotation validTree)
+    let input = (AVLNode 1 1 EmptyNode (AVLNode 2 2 EmptyNode (AVLNode 3 3 EmptyNode EmptyNode Zero) MinusOne) MinusOne)
+    let expected = (AVLNode 2 2 (AVLNode 1 1 EmptyNode EmptyNode Zero) (AVLNode 3 3 EmptyNode EmptyNode Zero) Zero)
+    assertEqual "LL rotation failed" expected (llRotation input)
+
+test_rrRotation = TestCase $ do
+    let input = (AVLNode 1 1 (AVLNode 2 2 (AVLNode 3 3 EmptyNode EmptyNode Zero) EmptyNode PlusOne) EmptyNode PlusOne)
+    let expected = (AVLNode 2 2 (AVLNode 3 3 EmptyNode EmptyNode Zero) (AVLNode 1 1 EmptyNode EmptyNode Zero) Zero)
+    assertEqual "RR rotation failed" expected (rrRotation input)
+
+test_lrRotation = TestCase $ do
+    let input = (AVLNode 1 1 EmptyNode (AVLNode 3 3 (AVLNode 2 2 EmptyNode EmptyNode Zero) EmptyNode PlusOne) MinusOne)
+    let expected = (AVLNode 2 2 (AVLNode 1 1 EmptyNode EmptyNode Zero) (AVLNode 3 3 EmptyNode EmptyNode Zero) Zero)
+    let result= lrRotation input
+    assertEqual "LR rotation failed" expected result
+
+
+test_rlRotation = TestCase $ do
+    let input = (AVLNode 3 3 (AVLNode 1 1 EmptyNode (AVLNode 2 2 EmptyNode EmptyNode Zero) PlusOne) EmptyNode PlusOne)
+    let expected = (AVLNode 2 2 (AVLNode 1 1 EmptyNode EmptyNode Zero) (AVLNode 3 3 EmptyNode EmptyNode Zero) Zero)
+    let result= rlRotation input
+    assertEqual "RL rotation failed" expected result
+
 
 rotationTests = TestLabel "Rotation testss" (TestList [
-        test_llRotation
+        test_llRotation,
+        test_rrRotation,
+        test_lrRotation,
+        test_rlRotation
     ])
 
 

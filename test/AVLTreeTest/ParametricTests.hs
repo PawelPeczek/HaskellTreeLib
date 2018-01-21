@@ -5,6 +5,7 @@ import Test.QuickCheck.All
 import Test.QuickCheck
 import AVLTree
 import AVLTree.Internal
+import Data.List (any, sort)
 
 --newtype (Ord a) => OrdTree a b = OrdTree (AVLTree a b)
 
@@ -17,7 +18,10 @@ instance (Ord a, Arbitrary a, Arbitrary b) => Arbitrary (AVLTree a b) where
 isOrdered :: (Ord a) => [a] -> Bool
 isOrdered [] = True
 isOrdered [_] = True
-isOrdered (x:y:xs) = x <= y && isOrdered xs
+isOrdered (x:y:xs) = x <= y && isOrdered (y:xs)
+
+areKeysUnique xs = let consecutive = zip <*> tail $ sort xs
+    in all (\((x,_), (y,_)) -> x /= y) consecutive
 
 prop_singletonInsert_imdepotence k v t =
     classify (t == newTree) "empty tree" $
@@ -39,7 +43,14 @@ prop_deleteGeneratesValidDepthTree xs n = n >= 0 && n < length xs ==>
         let (toDel, _) = xs!!n  in
         isValid' . fst . delete toDel $ fromList xs
 
-prop_toListIsOrdered = isOrdered . keys
+prop_keysAreOrdered = isOrdered . keys
+
+prop_associtedValuesAreFound xs = areKeysUnique xs ==>
+    let tree = fromList xs in
+    all (\(k, v) -> (tree, Just v) == getValueOfKey k tree) xs
+
+prop_valuesAreKeyOrdered xs = areKeysUnique xs ==>
+    (values $ fromList xs) == (map snd . sort $ xs)
 
 prop_leftRotationPreservesOrdering xs =
     isValidInput tree ==>

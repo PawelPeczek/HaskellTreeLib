@@ -120,13 +120,13 @@ treeToList t = Stack.toList $ toStack t emptyStack
 keys :: (Ord a) =>
   AVLTree a b -- ^ 'AVLTree a b' to linearize
   -> [a] -- ^ 'List' of keys in ascending order
-keys = map (\(k, _) -> k) . treeToList
+keys = map fst . treeToList
 
 -- | Function that returns list of values in AVLTree in key ascending order
 values :: (Ord a) =>
   AVLTree a b -- ^ 'AVLTree a b' to linearize
   -> [b] -- ^ 'List' of keys in ascending order
-values = map (\(_, v) -> v) . treeToList
+values = map snd . treeToList
 
 -- | Function that insert an element key of type a and value of type b into the AVLTree a b.
 -- This version of insert function provides a straightforward insert
