@@ -3,6 +3,7 @@ module AVLTreeTest.ParametricTests where
 
 import Test.QuickCheck.All
 import Test.QuickCheck
+import Utils
 import AVLTree
 import AVLTree.Internal
 import Data.List (any, sort)
@@ -15,13 +16,6 @@ instance (Ord a, Arbitrary a, Arbitrary b) => Arbitrary (AVLTree a b) where
             return $ foldr (&:) newTree pairs
         )
 
-isOrdered :: (Ord a) => [a] -> Bool
-isOrdered [] = True
-isOrdered [_] = True
-isOrdered (x:y:xs) = x <= y && isOrdered (y:xs)
-
-areKeysUnique xs = let consecutive = zip <*> tail $ sort xs
-    in all (\((x,_), (y,_)) -> x /= y) consecutive
 
 prop_singletonInsert_imdepotence k v t =
     classify (t == newTree) "empty tree" $

@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 60e1213d081808b8e6049707812a4ed7662a6b559cdaf8ca30a0ce913b36baf0
+-- hash: 33da8269783d50dfb3b78f1c1add3a613897d841f0aa02d4eef08086f18933f9
 
 name:           HaskellTreeLib
 version:        0.1.0.0
@@ -26,19 +26,6 @@ source-repository head
   location: https://github.com/githubuser/HaskellTreeLib
 
 library
-  exposed-modules:
-      AVLSort
-      AVLTree
-      AVLTree.Internal
-      Examples
-      HashKey
-      HashMap
-      HashSet
-      Lib
-      Stack
-      Utils
-  other-modules:
-      Paths_HaskellTreeLib
   hs-source-dirs:
       src
   build-depends:
@@ -46,12 +33,23 @@ library
     , QuickCheck
     , base >=4.7 && <5
     , hashable >=1.2.6.1
+  exposed-modules:
+      AVLSort
+      AVLTree
+      AVLTree.Internal
+      HashKey
+      HashMap
+      HashSet
+      Lib
+      Utils
+      Stack
+      Examples
+  other-modules:
+      Paths_HaskellTreeLib
   default-language: Haskell2010
 
 executable HaskellTreeLib-exe
   main-is: Main.hs
-  other-modules:
-      Paths_HaskellTreeLib
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -61,17 +59,13 @@ executable HaskellTreeLib-exe
     , QuickCheck
     , base >=4.7 && <5
     , hashable >=1.2.6.1
+  other-modules:
+      Paths_HaskellTreeLib
   default-language: Haskell2010
 
 test-suite HaskellTreeLib-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
-  other-modules:
-      AVLTreeTest.ParametricTests
-      AVLTreeTest.UnitTests
-      HashSetTest.ParametricTests
-      HashSetTest.UnitTests
-      Paths_HaskellTreeLib
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -81,4 +75,8 @@ test-suite HaskellTreeLib-test
     , QuickCheck
     , base >=4.7 && <5
     , hashable >=1.2.6.1
+  other-modules:
+      AVLTreeTest.ParametricTests
+      AVLTreeTest.UnitTests
+      Paths_HaskellTreeLib
   default-language: Haskell2010
