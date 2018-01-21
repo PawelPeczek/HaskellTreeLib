@@ -49,8 +49,8 @@ getElement k (HashMap avl) =
     case foundV of
       Nothing -> (HashMap avl', Nothing)
       _ -> (HashMap avl', foundV)
-  where
-    (avl', foundV) = getValueOfKey (prepeareKey k) avl'
+    where
+      (avl', foundV) = getValueOfKey (prepeareKey k) avl
 
 -- | Function that returns key set from HashMap - the order is random
 getKeys :: (Eq a) =>

@@ -42,6 +42,7 @@ library
       HashSet
       Lib
       Stack
+      Examples
   other-modules:
       Paths_HaskellTreeLib
   default-language: Haskell2010
