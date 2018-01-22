@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 95efada3a077b37f75ca8cecd229c9c95a70386c973c05134e1a218474a4cd0d
+-- hash: 7eab8b4a2460b632389da86927eebe8fc6aa427dd3ba79dd7c377c68f4d2c785
 
 name:           HaskellTreeLib
 version:        0.1.0.0
@@ -69,6 +69,8 @@ test-suite HaskellTreeLib-test
   other-modules:
       AVLTreeTest.ParametricTests
       AVLTreeTest.UnitTests
+      HashKeyTest.ParametricTests
+      HashKeyTest.UnitTests
       HashSetTest.ParametricTests
       Paths_HaskellTreeLib
   hs-source-dirs:

@@ -67,7 +67,3 @@ rotationTests = TestLabel "Rotation testss" (TestList [
 
 
 unitTests = TestList [validityTests, rotationTests]
-
---main :: IO Counts
---main = do _ <- runTestTT tests
---               runTestTT tests'

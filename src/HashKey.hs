@@ -10,9 +10,10 @@ Copyright   : (c) Wojciech Geisler, 2018
 
 module HashKey
     (
-      HashKey,
+      HashKey (HashKey),
       prepareKey,
       getOriginalKey,
+      test
     ) where
 
 import Data.Hashable
@@ -28,7 +29,7 @@ instance Eq a => Ord (HashKey a) where
   (<=) (HashKey (i1, v1)) (HashKey (i2, v2)) =
     i1 < i2 || (HashKey (i1, v1)) == (HashKey (i2, v2))
 
--- | Function that prepare hey
+-- | Function preparing key to be used in a HashMap
 prepareKey :: (Hashable a, Eq a) =>
   a -- ^ Value to be hashed
   -> HashKey a -- ^ Key prepared to be used in HashMap/HashSet
@@ -40,3 +41,5 @@ getOriginalKey ::
   HashKey a -- ^ hashed key to unpack
   -> a -- ^ Original key
 getOriginalKey (HashKey (_, org)) = org
+
+test = (prepareKey (5 :: Int)) == (HashKey (5,5))
