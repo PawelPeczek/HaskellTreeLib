@@ -25,6 +25,9 @@ import Data.Hashable
 -- | Definition of basic structure used in HashMap
 data HashMap a b = HashMap (AVLTree (HashKey a) b)
 
+instance (Eq a, Hashable a, Show a, Show b) => Show (HashMap a b) where
+    show hs = show . map (\k -> (k, getElement k hs)) $ getKeys hs
+
 -- | Function that returns new empty 'HashMap'
 newHashMap :: HashMap a b
 newHashMap = HashMap newTree
@@ -37,20 +40,14 @@ insertKeyVal :: (Eq a, Hashable a) =>
   -> HashMap a b -- ^ 'HashMap a b' after insertion
 insertKeyVal k v (HashMap avl) = HashMap (insertUnique (prepareKey k) v avl)
 
--- | Function that get element with a given key from given HashMap
--- without deleting it. The function returns (HashMap, Maybe value)
--- so that in case of success the requested value is placed in Just value,
--- otherwise the second element of pair is Nothing
+-- | Function returns element with a given key from given HashMap
+-- without deleting it. If given key is not present in the map Nothing
+-- is returned.
 getElement :: (Eq a, Hashable a) =>
   a -- ^ key of type a
   -> HashMap a b -- ^ 'HashMap a b' to search to
-  -> (HashMap a b, Maybe b) -- ^ result as described above
-getElement k (HashMap avl) =
-    case foundV of
-      Nothing -> (HashMap avl', Nothing)
-      _ -> (HashMap avl', foundV)
-    where
-      (avl', foundV) = getValueOfKey (prepareKey k) avl
+  -> Maybe b -- ^ result as described above
+getElement k (HashMap avl) = getValueByKey (prepareKey k) avl
 
 -- | Function that returns key set from HashMap - the order is random
 getKeys :: (Eq a) =>

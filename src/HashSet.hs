@@ -21,7 +21,10 @@ import AVLTree
 import Data.Hashable
 
 -- | Definition of basic structure used in HashSet
-data HashSet a = HashSet (AVLTree (HashKey a) ())
+data HashSet a = HashSet (AVLTree (HashKey a) ()) deriving (Eq)
+
+instance  (Show a, Eq a) => Show (HashSet a) where
+    show = show . getElements
 
 -- | Function that returns new empty 'HashSet'
 newHashSet :: HashSet a
@@ -55,10 +58,11 @@ containsElement k (HashSet avl) = containsKey (prepareKey k) avl
 deleteElement :: (Hashable a, Eq a) =>
   a -- ^ Key of type a to delete
   -> HashSet a -- ^ given 'HashSet a'
-  -> (HashSet a, Maybe ()) -- ^ output as described above
+  -> (HashSet a, Maybe a) -- ^ output as described above
 deleteElement k (HashSet avl) =
   case delV of
     Nothing -> (HashSet avl', Nothing)
-    _ -> (HashSet avl', delV)
+    _ -> (HashSet avl', Just k)
+
   where
     (avl', delV) = delete (prepareKey k) avl

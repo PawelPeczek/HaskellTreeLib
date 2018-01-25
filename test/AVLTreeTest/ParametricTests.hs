@@ -41,7 +41,7 @@ prop_keysAreOrdered = isOrdered . keys
 
 prop_associtedValuesAreFound xs = areKeysUnique xs ==>
     let tree = fromList xs in
-    all (\(k, v) -> (tree, Just v) == getValueOfKey k tree) xs
+    all (\(k, v) -> Just v == getValueByKey k tree) xs
 
 prop_valuesAreKeyOrdered xs = areKeysUnique xs ==>
     (values $ fromList xs) == (map snd . sort $ xs)

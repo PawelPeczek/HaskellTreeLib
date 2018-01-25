@@ -54,7 +54,7 @@ hashMapExample1 = do
   putStrLn "Checking if HashMap contains key Wojtek:"
   putStrLn . show $ containsKey "Wojtek" hm'
   putStrLn "Getting value associated to key Jan (Should be second value 388)"
-  putStrLn . show . snd $ getElement "Jan" hm'
+  putStrLn . show $ getElement  "Jan" hm'
 
 -- | Example of usage HashSet module
 hashSetExample1 :: IO ()  -- ^ IO () action as return value

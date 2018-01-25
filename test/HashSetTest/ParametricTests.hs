@@ -15,18 +15,23 @@ prop_setContainsOnlyInserted vals excludes = let
     classify (setVals == []) "empty sets" $
     classify (excludes == []) "empty excluded" $
     (all (\x -> containsElement x newSet) setVals)
-    &&
+    .&&.
     (all (\x -> not $ containsElement x newSet) excludes)
     where types = (vals :: [Int], excludes :: [Int])
 
-prop_deleteRemovesSetElements vals = let
-    set = foldr (insertToSet) newHashSet (tail vals)
-    results =
-        (scanr (\val (deleted, correct, set) ->
-            (val, False == containsElement deleted set, fst $ deleteElement val set))
-        (head vals, True, set) vals)
-    in areUnique vals ==>
-    all (\(_, result, __) -> result) results
+prop_deleteRemovesSetElements [] = classify True "trivial" $ True
+prop_deleteRemovesSetElements vals@(v:als) = let
+    set = foldr (insertToSet) newHashSet (als)
+    (_, result, finalSet) =
+        (foldr (\val (deleted, correct, set) ->
+            (val, correct && not (containsElement deleted set), fst $ deleteElement val set))
+        (v, True, set) vals)
+    -- classification boundaries
+    [down, up] = (10 *) <$> ([floor, ceiling] <*> [(fromIntegral $ length vals) / 10])
+    in
+    areUnique vals ==>
+    classify True ("length in " ++ show [down, up]) $
+    result -- && finalSet == newHashSet
     where types = vals :: [Int]
 
 

@@ -273,8 +273,7 @@ containsKey :: Ord a =>
   -> Bool -- ^ result - indicates the success status of search
 containsKey _ EmptyNode = False
 containsKey key (AVLNode k _ lt rt _) =
-  if key == k then True
-  else (containsKey key lt) || (containsKey key rt)
+  key == k || (containsKey key  lt) || (containsKey key rt)
 
 -- | Function gets BalanceCoeff from given AVLTree
 getBC ::
@@ -355,8 +354,8 @@ getKey ::
 getKey EmptyNode = error "Unsupported operation!"
 getKey (AVLNode k _ _ _ _) = k
 
--- | Function that returns first value from given AVLTree (bascially allowed only for
--- AVLNode data constructor)
+-- | Function that returns value stored in the root of given tree.
+-- Allowed only for the AVLNode data constructor)
 getValue ::
   AVLTree a b -- ^ 'AVLTree a b' to get the first element value
   -> b -- ^ requested value
@@ -387,22 +386,16 @@ depth EmptyNode = 0
 depth (AVLNode _ _ lt rt _) = max (depth lt) (depth rt) + 1
 
 -- | Function that get element with a given key from given AVLTree
--- without deleting it. The function returns (AVLTree, Maybe value)
--- so that in case of success the requested value is placed in Just value,
--- otherwise the second element of pair is Nothing
-getValueOfKey :: (Ord a) =>
+-- without deleting it. Returns Nothing if key is not present int the tree
+getValueByKey :: (Ord a) =>
   a -- ^ searching ket of type a
   -> AVLTree a b -- ^ 'AVLTree a b' to look for element
-  -> (AVLTree a b, Maybe b) -- ^ result as described above
-getValueOfKey k t =
-  if containsKey k t == True then (t, Just (getFromTree k t))
-  else (t, Nothing)
-  where
-    getFromTree _ EmptyNode = error "Unsupported operation!"
-    getFromTree key (AVLNode k v lt rt _) =
-      if key == k then v
-      else if key > k then getFromTree key rt
-      else getFromTree key lt
+  -> Maybe b -- ^ result as described above
+getValueByKey _ EmptyNode = Nothing
+getValueByKey key (AVLNode k v lt rt _) =
+  if key == k then Just v
+  else if key > k then getValueByKey key rt
+  else getValueByKey key lt
 
 -- | Infix operator for adding a key value pair to a tree
 (&:) :: Ord a => (a, b) -> AVLTree a b -> AVLTree a b

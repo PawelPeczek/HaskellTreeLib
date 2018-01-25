@@ -19,7 +19,7 @@ module AVLTree (
     insertKeyAsValueUnique,
     delete,
     containsKey,
-    getValueOfKey
+    getValueByKey
     ) where
 
 import AVLTree.Internal
