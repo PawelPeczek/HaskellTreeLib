@@ -9,8 +9,8 @@ import AVLTreeTest.ParametricTests as TreeParametricTests
 import AVLTreeTest.UnitTests as TreeUnitTests
 import HashKeyTest.UnitTests as HashKeyUnitTests
 import HashKeyTest.ParametricTests as HashKeyParametricTests
-import HashSetTest.ParametricTests as SetParametricTests
-import HashMapTest.ParametricTests as MapParametricTests
+import TreeSetTest.ParametricTests as SetParametricTests
+import TreeMapTest.ParametricTests as MapParametricTests
 
 
 --main :: IO ()

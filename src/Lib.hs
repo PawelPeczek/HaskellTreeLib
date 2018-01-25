@@ -21,7 +21,7 @@ presentation = do
   avlSortExample1
   avlSortExample2
   avlSortExample3
-  putStrLn "Examples of HashMap"
-  hashMapExample1
-  putStrLn "Examples of HashSet"
-  hashSetExample1
+  putStrLn "Examples of TreeMap"
+  treeMapExample1
+  putStrLn "Examples of TreeSet"
+  treeSetExample1

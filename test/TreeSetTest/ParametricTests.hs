@@ -1,17 +1,17 @@
 {-# LANGUAGE TemplateHaskell #-}
-module HashSetTest.ParametricTests where
+module TreeSetTest.ParametricTests where
 
 import Test.QuickCheck.All
 import Test.QuickCheck
 import Utils
-import HashSet
+import TreeSet
 
-prop_valuesInSetAreUnique xs = areUnique . getElements $ foldr (insertToSet) newHashSet xs
+prop_valuesInSetAreUnique xs = areUnique . getElements $ foldr (insertToSet) newTreeSet xs
     where types = xs :: [Int]
 
 prop_setContainsOnlyInserted vals excludes = let
     setVals = filter (\x -> not $ elem x excludes) vals
-    newSet = foldr (insertToSet) newHashSet setVals in
+    newSet = foldr (insertToSet) newTreeSet setVals in
     classify (setVals == []) "empty sets" $
     classify (excludes == []) "empty excluded" $
     (all (\x -> containsElement x newSet) setVals)
@@ -21,7 +21,7 @@ prop_setContainsOnlyInserted vals excludes = let
 
 prop_deleteRemovesSetElements [] = classify True "trivial" $ True
 prop_deleteRemovesSetElements vals@(v:als) = let
-    set = foldr (insertToSet) newHashSet (als)
+    set = foldr (insertToSet) newTreeSet (als)
     (_, result, finalSet) =
         (foldr (\val (deleted, correct, set) ->
             (val, correct && not (containsElement deleted set), fst $ deleteElement val set))
@@ -31,7 +31,7 @@ prop_deleteRemovesSetElements vals@(v:als) = let
     in
     areUnique vals ==>
     classify True ("length in " ++ show [down, up]) $
-    result -- && finalSet == newHashSet
+    result -- && finalSet == newTreeSet
     where types = vals :: [Int]
 
 
