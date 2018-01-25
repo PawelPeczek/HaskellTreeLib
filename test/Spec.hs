@@ -11,6 +11,7 @@ import HashKeyTest.UnitTests as HashKeyUnitTests
 import HashKeyTest.ParametricTests as HashKeyParametricTests
 import TreeSetTest.ParametricTests as SetParametricTests
 import TreeMapTest.ParametricTests as MapParametricTests
+import StackTest.ParametricTests as StackParametricTests
 
 
 --main :: IO ()
@@ -20,5 +21,6 @@ main = do runTestTT TreeUnitTests.unitTests
           MapParametricTests.runTests
           runTestTT HashKeyUnitTests.unitTests
           HashKeyParametricTests.runTests
+          StackParametricTests.runTests
 
 

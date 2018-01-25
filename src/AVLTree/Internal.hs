@@ -101,12 +101,14 @@ debugShow tree = debugShow' 0 tree
             pad shift ++ ")"
         pad sh = replicate sh ' '
 
--- | Checks if given tree is a valid AVL tree
+-- | Checks if balance coefficients match actual subtree depths
 isValid :: AVLTree a b -> Bool
 isValid EmptyNode = True
 isValid (AVLNode _ _ lt rt bc) = diff == numerizeBC bc && isValid lt && isValid rt
     where diff = depth lt - depth rt
 
+-- | Checks that all subtree height differences do not exceed value allowed in
+-- an AVL tree
 isValid' :: AVLTree a b -> Bool
 isValid' EmptyNode = True
 isValid' (AVLNode _ _ lt rt bc) = diff `elem` [-1, 0, 1] && isValid' lt && isValid' rt

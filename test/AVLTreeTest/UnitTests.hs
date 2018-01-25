@@ -19,43 +19,40 @@ validTree =
             Zero)
         Zero)
 
+test_isValidDetectsValidTree = TestCase $ do
+    t <- return validTree
+    assertEqual "Valid tree should pass isValid" True (isValid  t)
+
 test_isValidDetectsInvalidTree = TestCase (do
     t <- return (AVLNode 2 1 (AVLNode 1 0 (AVLNode 0 0 EmptyNode EmptyNode Zero) EmptyNode MinusOne) EmptyNode Zero)
     assertEqual "Invalid tree not detected"  False (isValid  t)
     )
 
-test_isValidDetectsValidTree = TestCase $ do
-    t <- return validTree
-    assertEqual "Valid tree should pass isValid" True (isValid  t)
-
-
-validityTests = TestLabel "Tests of validity checks" (TestList [
+validityTests = TestLabel "Tests of isValid function" (TestList [
         test_isValidDetectsInvalidTree,
         test_isValidDetectsValidTree
     ])
 
 test_llRotation = TestCase $ do
-    let input = (AVLNode 1 1 EmptyNode (AVLNode 2 2 EmptyNode (AVLNode 3 3 EmptyNode EmptyNode Zero) MinusOne) MinusOne)
+    let input    = (AVLNode 1 1 EmptyNode (AVLNode 2 2 EmptyNode (AVLNode 3 3 EmptyNode EmptyNode Zero) MinusOne) MinusOne)
     let expected = (AVLNode 2 2 (AVLNode 1 1 EmptyNode EmptyNode Zero) (AVLNode 3 3 EmptyNode EmptyNode Zero) Zero)
     assertEqual "LL rotation failed" expected (llRotation input)
 
 test_rrRotation = TestCase $ do
-    let input = (AVLNode 1 1 (AVLNode 2 2 (AVLNode 3 3 EmptyNode EmptyNode Zero) EmptyNode PlusOne) EmptyNode PlusOne)
+    let input    = (AVLNode 1 1 (AVLNode 2 2 (AVLNode 3 3 EmptyNode EmptyNode Zero) EmptyNode PlusOne) EmptyNode PlusOne)
     let expected = (AVLNode 2 2 (AVLNode 3 3 EmptyNode EmptyNode Zero) (AVLNode 1 1 EmptyNode EmptyNode Zero) Zero)
     assertEqual "RR rotation failed" expected (rrRotation input)
 
 test_lrRotation = TestCase $ do
-    let input = (AVLNode 1 1 EmptyNode (AVLNode 3 3 (AVLNode 2 2 EmptyNode EmptyNode Zero) EmptyNode PlusOne) MinusOne)
+    let input    = (AVLNode 1 1 EmptyNode (AVLNode 3 3 (AVLNode 2 2 EmptyNode EmptyNode Zero) EmptyNode PlusOne) MinusOne)
     let expected = (AVLNode 2 2 (AVLNode 1 1 EmptyNode EmptyNode Zero) (AVLNode 3 3 EmptyNode EmptyNode Zero) Zero)
-    let result= lrRotation input
-    assertEqual "LR rotation failed" expected result
+    assertEqual "LR rotation failed" expected (lrRotation input)
 
 
 test_rlRotation = TestCase $ do
     let input = (AVLNode 3 3 (AVLNode 1 1 EmptyNode (AVLNode 2 2 EmptyNode EmptyNode Zero) PlusOne) EmptyNode PlusOne)
     let expected = (AVLNode 2 2 (AVLNode 1 1 EmptyNode EmptyNode Zero) (AVLNode 3 3 EmptyNode EmptyNode Zero) Zero)
-    let result= rlRotation input
-    assertEqual "RL rotation failed" expected result
+    assertEqual "RL rotation failed" expected (rlRotation input)
 
 
 rotationTests = TestLabel "Rotation testss" (TestList [

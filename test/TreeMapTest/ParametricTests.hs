@@ -7,13 +7,15 @@ import Data.List
 import Utils
 import TreeMap
 
+-- Checks that elements inserted to map can be retrieved by the key
 prop_insertedElementCanBeFound vals = 
     let treemap = foldr (\(k, v) hs -> insertKeyVal k v hs) newTreeMap vals
     in areKeysUnique vals ==>
     all (\(k, v) -> Just v == getElement k treemap) vals
 
+-- Checks that elements are overwritten upon insert with the same key
 prop_laterInsertOverwritesValue keys = 
-    areUnique keys ==>
+    areUnique keys ==> -- unexpected repeated keys should not interfere
     do
     vals1 <- vector (length keys) :: Gen [Int]
     vals2 <- vector (length keys) :: Gen [Int]
@@ -24,6 +26,7 @@ prop_laterInsertOverwritesValue keys =
         &&
         (all (\(k, v) -> Just v == getElement k hs2) $ zip keys vals2)
 
+-- Checks that getValues returns all inserted values
 prop_getValuesReturnsAll keys vals =
     areUnique keys ==>
     let
@@ -32,10 +35,11 @@ prop_getValuesReturnsAll keys vals =
     (sort used) == (sort . getValues $ hs)
 
 
+-- Checks that deleted element cannot be found in the TreeMap
 prop_deleteRemovesElement [] = classify True "trivial" $ True
 prop_deleteRemovesElement keyvals = let
     keys@(fstK:_) = fst . unzip $ keyvals
-    fullHS = foldr (\(k, v) hs -> insertKeyVal k v hs) newTreeMap keyvals
+    fullHS = foldr (uncurry insertKeyVal) newTreeMap keyvals
     (_, result, finalHS) =
         (foldr (\k (deleted, correct, hs) ->
             (k, correct && not (containsKey deleted hs), fst $ deleteFromTM k hs))

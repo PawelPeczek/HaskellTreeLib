@@ -22,7 +22,7 @@ newtype Stack a = Stack [a] deriving (Show)
 emptyStack :: Stack a -- ^ Function return (empty 'Stack')
 emptyStack = Stack []
 
--- | Function that cheks whether tge given Stack is empty
+-- | Function that cheks whether given Stack is empty
 isEmpty ::
   Stack a -- ^ Input 'Stack a'
   -> Bool -- ^ Boolean value indicates emptiness of input 'Stack a'
