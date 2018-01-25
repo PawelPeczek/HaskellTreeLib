@@ -39,7 +39,7 @@ numerizeBC Zero = 0
 numerizeBC PlusOne = 1
 numerizeBC MinusOne = -1
 
--- | Definiction of AVL tree.
+-- | Definition of AVL tree.
 data AVLTree a b
   -- | AVLModule data constructor provides AVLNode of type a with the
   -- value of node key, value, parent left subtre, right subtree and balance coefficient
@@ -69,6 +69,18 @@ instance (Show a, Show b) => Show (AVLTree a b) where
 instance (Ord a) => Foldable (AVLTree a) where
     foldr f acc = foldr f acc . values
     foldMap f = foldMap f . values
+
+instance Functor (AVLTree a) where
+    fmap f EmptyNode = EmptyNode
+    fmap f (AVLNode k v lt rt bc) =
+        (AVLNode k (f v) (fmap f lt) (fmap f rt) bc)
+
+
+-- | Infix operator for adding a key value pair to a tree
+(&:) :: Ord a => (a, b) -> AVLTree a b -> AVLTree a b
+(&:) = uncurry insert
+infixr 5 &: -- same associativity as (:)
+
 
 -- | Debug function which provides a way to print additional info about balance
 -- coefficients of nodes
@@ -396,10 +408,6 @@ getValueByKey key (AVLNode k v lt rt _) =
   if key == k then Just v
   else if key > k then getValueByKey key rt
   else getValueByKey key lt
-
--- | Infix operator for adding a key value pair to a tree
-(&:) :: Ord a => (a, b) -> AVLTree a b -> AVLTree a b
-(&:) (k, v) t = insert k v t
 
 
 fromList :: Ord a => [(a, b)] -> AVLTree a b

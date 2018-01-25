@@ -14,6 +14,7 @@ module TreeMap
       getElement,
       getKeys,
       getValues,
+      getKeysValues,
       TreeMap.containsKey,
       deleteFromTM
     ) where
@@ -26,7 +27,7 @@ import Data.Hashable
 data TreeMap a b = TreeMap (AVLTree (HashKey a) b)
 
 instance (Eq a, Hashable a, Show a, Show b) => Show (TreeMap a b) where
-    show tm = show . map (\k -> (k, getElement k tm)) $ getKeys tm
+    show = show . getKeysValues
 
 -- | Function that returns new empty 'TreeMap'
 newTreeMap :: TreeMap a b
@@ -62,12 +63,16 @@ getKeys (TreeMap avl) = loop (keys avl) []
 getValues :: (Eq a) =>
   TreeMap a b -- ^ 'TreeMap a b' to take keys
   -> [b] -- ^ set of keys
-getValues (TreeMap avl) = loop (values avl) []
-    where
-      loop [] acc = acc
-      loop (x:xs) acc = loop xs (x : acc)
+getValues (TreeMap avl) = values avl
 
--- | Function that chechs whether TreeMap contains given key
+-- | Function that returns key value tuples from given TreeMap - the order is
+-- random
+getKeysValues :: (Hashable a, Eq a) =>
+    (TreeMap a b)
+    -> [(a, b)]
+getKeysValues (TreeMap avl) = map (\(k, v) -> (getOriginalKey k, v)) $ treeToList avl
+
+-- | Function that checks whether TreeMap contains given key
 containsKey :: (Hashable a, Eq a) =>
   a -- ^ Key of type a to check
   -> TreeMap a b -- ^ given 'TreeMap a b'

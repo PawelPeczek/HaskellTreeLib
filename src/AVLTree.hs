@@ -24,11 +24,3 @@ module AVLTree (
 
 import AVLTree.Internal
 
--- | Infix operator for adding a key value pair to a tree
-(&:) :: Ord a => (a, b) -> AVLTree a b -> AVLTree a b
-(&:) (k, v) t = insert k v t
-
-instance Functor (AVLTree a) where
-    fmap f EmptyNode = EmptyNode
-    fmap f (AVLNode k v lt rt bc) =
-        (AVLNode k (f v) (fmap f lt) (fmap f rt) bc)

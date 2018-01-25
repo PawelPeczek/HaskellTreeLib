@@ -7,6 +7,7 @@ import Utils
 import AVLTree
 import AVLTree.Internal
 import Data.List (any, sort)
+import Text.Show.Functions
 
 --newtype (Ord a) => OrdTree a b = OrdTree (AVLTree a b)
 
@@ -36,6 +37,19 @@ prop_deleteGeneratesValidTree xs n = n >= 0 && n < length xs ==>
 prop_deleteGeneratesValidDepthTree xs n = n >= 0 && n < length xs ==>
         let (toDel, _) = xs!!n  in
         isValid' . fst . delete toDel $ fromList xs
+
+-- Functors must preserve identity morphisms
+prop_functorIdentity xs f =
+    (fmap f (fromList xs)) == (fromList $ map (\(k, v) -> (k, f v)) xs)
+
+-- Functors preserve composition of morphisms 
+prop_functorComposition xs f g =
+    let tree = fromList xs in
+    (fmap (f . g) $ tree) == (fmap f . fmap g $ tree)
+
+-- Insert operator (&:) should be right-associative
+prop_insertRightAssociativity kv1 kv2 tree =
+    (kv1 &: kv2 &: tree) == (kv1 &: (kv2 &: tree))
 
 prop_keysAreOrdered = isOrdered . keys
 
